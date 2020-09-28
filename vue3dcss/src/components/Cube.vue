@@ -1,15 +1,8 @@
 <template>
     <div v-bind:style="cuberContainer" class="cube-wrapper">
-      <div class="camera-controls" v-if="showCamera">
+      <div class="camera-controls" v-if="showControls">
         <input type="range" style="width: 150px" min="500" max="6000" step="10" v-model="perspective">-->
         <input type="number" style="width: 25px" v-model="perspective"/>
-        <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)" class="icon icon-tabler icon-tabler-zoom-in" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <circle cx="10" cy="10" r="7" />
-          <line x1="7" y1="10" x2="13" y2="10" />
-          <line x1="10" y1="7" x2="10" y2="13" />
-          <line x1="21" y1="21" x2="15" y2="15" />
-        </svg>
         <input type="range" style="width: 150px" min="0" max="360" step="1" v-model="cameraArray[0]">
         <input type="number" style="width: 25px" v-model="cameraArray[0]"/>
         <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)" class="icon icon-tabler icon-tabler-arrows-vertical" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -36,11 +29,12 @@
         <input type="range" style="width: 150px" min="0" max="2" step="1" v-model="transitionTime">
         <input type="number" style="width: 25px" v-model="transitionTime"/>
         <span v-text="'s'"></span>
-        <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)" class="icon icon-tabler icon-tabler-clock" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <circle cx="12" cy="12" r="9" />
-          <polyline points="12 7 12 12 15 15" />
-        </svg>
+        <input type="range" style="width: 250px" :min="-1000" :max="1000" step="1" @click="manualTranslate = true;" v-model="translateX">
+        <input type="number" style="width: 60px" v-model="translateX"/>
+        <input type="range" style="width: 250px" :min="-500" :max="500" step="1" @click="manualTranslate = true;" v-model="translateY">
+        <input type="number" style="width: 50px" v-model="translateY"/>
+        <input type="range" style="width: 250px" :min="-1000" :max="1000" step="1" @click="manualTranslate = true;" v-model="translateZ">
+        <input type="number" style="width: 60px" v-model="translateZ"/>
         <br>
       </div>
       <div class="cube" v-bind:style="cube" >
@@ -58,7 +52,10 @@
         name: "Cube",
         data(){
           return{
-
+            translateX: 0,
+            translateY: 0,
+            translateZ: 0,
+            manualTranslate: false,
           }
         },
         props:{
@@ -88,7 +85,7 @@
              return [-30,-60,0]
             }
           },
-          showCamera:{
+          showControls:{
             type: Boolean,
             default: false
           },
@@ -122,7 +119,7 @@
           },
           gradient:{
             type: String,
-          }
+          },
         },
         computed:{
           cube(){
@@ -132,8 +129,8 @@
               position: 'absolute',
               backgroundColor: 'transparent',
               transformStyle: 'preserve-3d',
-              transform: `rotateX(${this.cameraArray[0]}deg) rotateY(${this.cameraArray[1]}deg) rotateZ(${this.cameraArray[2]}deg)`,
-              transition: this.transitionTime*5 + 's linear',
+              transform: `rotateX(${this.cameraArray[0]}deg) rotateY(${this.cameraArray[1]}deg) rotateZ(${this.cameraArray[2]}deg)` + `translateZ(${this.translateZ}px) translateY(${this.translateY}px) translateX(${this.translateX}px)`,
+              transition: this.transitionTime + 's linear',
             }
           },
           cuberContainer(){
@@ -142,10 +139,9 @@
               height: this.height + 'px',
               position: 'relative',
               perspective: this.perspective + 'px',
-              transition: this.transitionTime*5 + 's ease',
+              transition: this.transitionTime + 's ease',
               zIndex: this.zIndex,
               transform: `translateZ(${this.zStagger}px) translateY(${this.yStagger}px) translateX(${this.xStagger}px)`
-
             }
           },
           frontFace(){

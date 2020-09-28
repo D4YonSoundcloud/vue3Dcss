@@ -1,11 +1,5 @@
 <template>
   <div id="app">
-<!--    <Cube :width="randomNumber" :height="randomNumber" :perspective="randomPerspective" :showCamera="true"></Cube>-->
-<!--    <CameraContainer :height="hundredCubesContainerHeightWidth" :width="hundredCubesContainerHeightWidth">-->
-<!--      <div v-for="(cube, index) in hundredCubes" :key="hundredCubes">-->
-<!--        <Cube :width="50" :height="50" :perspective="3000"></Cube>-->
-<!--      </div>-->
-<!--    </CameraContainer>-->
     <div class="camera-controls">
       <button @click="addCubeLayer">Add Layer ({{cubeOfCubesStartArray.length}})</button>
       <button @click="addCube">Add Cubes ({{cubeLayer}})</button>
@@ -65,10 +59,12 @@
       <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="gradientColor1Percentage">
       <input type="number" style="width: 35px" v-model="gradientColor1Percentage"/>
       <input type="color" style="width: 250px" v-model="gradientColor2">
-      <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="gradientColor2Percentage">
-      <input type="number" style="width: 35px" v-model="gradientColor2Percentage"/>
+      <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="computedGradientPercentageTwo">
+      <input type="number" style="width: 35px" v-model="computedGradientPercentageTwo"/>
       <input type="range" style="width: 250px" min="0" max="360" step="1" v-model="gradientColorAngle">
       <input type="number" style="width: 35px" v-model="gradientColorAngle"/>
+      <input type="range" style="width: 250px" min="0" max="10" step="1" v-model="gradientVariable">
+      <input type="number" style="width: 35px" v-model="gradientVariable"/>
       <input type="color" style="width: 250px" v-model="borderColor">
       <input type="range" style="width: 250px" min="0" max="360" step="1" v-model="computedCubeCameraX">
       <input type="number" style="width: 35px" v-model="computedCubeCameraX"/>
@@ -94,7 +90,7 @@
           <div class="hundred-cube-test" v-bind:style="{height: hundredCubesContainerHeightWidth + 'px', width: hundredCubesContainerHeightWidth + 'px',transform: `translateZ(-${(hundredCubesWidth*index+1)*zTranslate/2}px)`, transition: transitionTime + 's ease', position: 'absolute'}" >
             <div v-for="(cube,index) in cubeOfCubes"  v-bind:style="{}" :key="index">
                 <Cube :width="hundredCubesWidth" :height="hundredCubesWidth"  :zIndex="index" class="cube"
-                      :borderColor="borderColor" :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage-(index)*5}deg, ${gradientColor1} ${gradientColor1Percentage}%, ${gradientColor2} ${gradientColor2Percentage}%, ${gradientColor1} ${gradientColor1Percentage}%, ${gradientColor2} ${gradientColor2Percentage}%)`"
+                      :borderColor="borderColor" :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage-(index)*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
                       :cameraArray="cubeAnimationArray"  :xStagger="(hundredCubesWidth*index/2)*xTranslate" :opacity="opacity" :yStagger="(hundredCubesWidth*index/2)*yTranslate" :transitionTime="transitionTime"></Cube>
             </div>
           </div>
@@ -103,6 +99,11 @@
           <h2 @click="moveTitlePageOver()" id="title-text">vue3Dcss</h2>
         </div>
       </div>
+      <Cube :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
+        :width="100" :height="100" :showControls="true"  :opacity="opacity"></Cube>
+      <MultiCube :width="50" :height="50" :showControls="true" :opacity="opacity"
+                 :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
+      ></MultiCube>
     </div>
   </div>
 </template>
@@ -113,12 +114,14 @@
   import CameraContainer from "./components/CameraContainer";
   import VueMixinTween from 'vue-mixin-tween'
   import Vue from 'vue'
+  import MultiCube from "./components/MultiCube";
 
 export default {
   name: 'App',
   components:{
     Cube,
-    CameraContainer
+    CameraContainer,
+    MultiCube,
   },
   data(){
     return{
@@ -129,7 +132,7 @@ export default {
       hundredCubesWidth: 75,
       textCubeWidth: 10,
       cubeAnimationArray: [0,0,0],
-      transitionTime: 1,
+      transitionTime: 5,
       cameraArray: [0,0,45],
       cubeCameraX: 0,
       cubeCameraY: 0,
@@ -142,6 +145,7 @@ export default {
       opacity: 0,
       cubeLayer: 3,
       cubeLayerCount: 0,
+      gradientVariable: 5,
       hundredCubesContainerHeightWidth: 0,
       gradientColor1: '#000000',
       gradientColor2: '#FFFFFF',
@@ -150,6 +154,8 @@ export default {
       gradientColorAngle: 45,
       borderColor: 'rgba(0,0,0,1)',
       tweenedGradient: 45,
+      tweenedGradientOne: 0,
+      tweenedGradientTwo: 10,
       tweenedCubeCameraX: 0,
       tweenedCubeCameraY: 0,
       tweenedCubeCameraZ: 0,
@@ -204,6 +210,12 @@ export default {
     gradientColorAngle(newVal){
       gsap.to(this.$data, { duration: this.transitionTime, tweenedGradient: newVal });
     },
+    gradientColor1Percentage(newVal){
+      gsap.to(this.$data, { duration: this.transitionTime, tweenedGradientOne: newVal });
+    },
+    gradientColor2Percentage(newVal){
+      gsap.to(this.$data, { duration: this.transitionTime, tweenedGradientTwo: newVal });
+    },
     cubeCameraX(newVal){
       gsap.to(this.$data, { duration: this.transitionTime, tweenedCubeCameraX: newVal });
     },
@@ -220,6 +232,12 @@ export default {
     // },
     computedGradientPercentage(){
       return this.tweenedGradient.toFixed();
+    },
+    computedGradientPercentageOne(){
+      return this.tweenedGradientOne.toFixed();
+    },
+    computedGradientPercentageTwo(){
+      return this.tweenedGradientTwo.toFixed();
     },
     computedCubeCameraX(){
       return this.tweenedCubeCameraX.toFixed();
@@ -253,20 +271,20 @@ export default {
     // }
     // this.$nextTick(() => myFunc())
     setInterval(()=>{
-      this.gradientColorAngle = this.gradientColorAngle + 1
-    },this.transitionTime*5)
+      this.gradientColorAngle = this.gradientColorAngle + 1;
+    },this.transitionTime)
     setInterval(()=>{
       Vue.set(this.cubeAnimationArray, 0, this.cubeAnimationArray[0] + 45)
       Vue.set(this.cubeAnimationArray, 1, this.cubeAnimationArray[1] - 45)
       // Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 180)
       console.log(this.cubeAnimationArray);
-    }, this.transitionTime*5000)
+    }, this.transitionTime*1000)
     setTimeout(()=>{
       this.opacity = 85;
-    },((this.transitionTime*5000))/2 )
+    },((this.transitionTime*1000))/2 )
     setTimeout(()=>{
       this.yTranslate = 0.25;
-    },((this.transitionTime*5000)/2))
+    },((this.transitionTime*1000)/2))
     this.$nextTick(()=>{ gsap.fromTo('#title-text', { y: 50, opacity: 0},{duration: 1, y: 0, opacity: 1, delay: this.transitionTime+1})})
   }
 }
