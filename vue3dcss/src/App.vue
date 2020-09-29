@@ -6,103 +6,61 @@
       <button @click="deleteCubeLayer">Remove Layer</button>
       <button @click="deleteCube">Remove Cubes</button>
       <input type="range" style="width: 250px" min="500" max="6000" step="10" v-model="randomPerspective">
-      <input type="number" style="width: 35px" v-model="randomPerspective"/>
-      <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)" class="icon icon-tabler icon-tabler-zoom-in" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <circle cx="10" cy="10" r="7" />
-        <line x1="7" y1="10" x2="13" y2="10" />
-        <line x1="10" y1="7" x2="10" y2="13" />
-        <line x1="21" y1="21" x2="15" y2="15" />
-      </svg>
-      <input type="range" style="width: 250px" min="-360" max="360" step="1" v-model="cameraArray[0]">
-      <input type="number" style="width: 35px" v-model="cameraArray[0]"/>
-      <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)" class="icon icon-tabler icon-tabler-arrows-vertical" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <polyline points="8 7 12 3 16 7" />
-        <polyline points="8 17 12 21 16 17" />
-        <line x1="12" y1="3" x2="12" y2="21" />
-      </svg>
-      <input type="range" style="width: 250px" min="-360" max="360" step="1" v-model="cameraArray[1]">
-      <input type="number" style="width: 35px" v-model="cameraArray[1]"/>
-      <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)" class="icon icon-tabler icon-tabler-arrows-horizontal" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <polyline points="7 8 3 12 7 16" />
-        <polyline points="17 8 21 12 17 16" />
-        <line x1="3" y1="12" x2="21" y2="12" />
-      </svg>
-      <input type="range" style="width: 250px" min="0" max="360" step="1" v-model="cameraArray[2]">
-      <input type="number" style="width: 35px" v-model="cameraArray[2]"/>
-      <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)"  class="icon icon-tabler icon-tabler-refresh" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />
-        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" />
-      </svg>
+      <input type="number" style="width: 60px" v-model="randomPerspective"/>
       <input type="range" style="width: 250px" min="0" max="2" step="1" v-model="transitionTime">
-      <input type="number" style="width: 35px" v-model="transitionTime"/>
+      <input type="number" style="width: 60px" v-model="transitionTime"/>
       <span v-text="'s'"></span>
-      <svg xmlns="http://www.w3.org/2000/svg" style="transform: translateY(4px)" class="icon icon-tabler icon-tabler-clock" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF0000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <circle cx="12" cy="12" r="9" />
-        <polyline points="12 7 12 12 15 15" />
-      </svg>
       <input type="range" style="width: 250px" min="0" max="2" step="0.25" v-model="zTranslate">
-      <input type="number" style="width: 35px" v-model="zTranslate"/>
+      <input type="number" style="width: 60px" v-model="zTranslate"/>
       <input type="range" style="width: 250px" min="0" max="2" step="0.25" v-model="xTranslate">
-      <input type="number" style="width: 35px" v-model="xTranslate"/>
+      <input type="number" style="width: 60px" v-model="xTranslate"/>
       <input type="range" style="width: 250px" min="0" max="2" step="0.25" v-model="yTranslate">
-      <input type="number" style="width: 35px" v-model="yTranslate"/>
+      <input type="number" style="width: 60px" v-model="yTranslate"/>
       <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="hundredCubesWidth">
-      <input type="number" style="width: 35px" v-model="hundredCubesWidth"/>
+      <input type="number" style="width: 60px" v-model="hundredCubesWidth"/>
       <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="opacity">
-      <input type="number" style="width: 35px" v-model="opacity"/>
+      <input type="number" style="width: 60px" v-model="opacity"/>
       <input type="color" style="width: 250px" v-model="gradientColor1">
       <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="gradientColor1Percentage">
-      <input type="number" style="width: 35px" v-model="gradientColor1Percentage"/>
+      <input type="number" style="width: 60px" v-model="gradientColor1Percentage"/>
       <input type="color" style="width: 250px" v-model="gradientColor2">
-      <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="computedGradientPercentageTwo">
-      <input type="number" style="width: 35px" v-model="computedGradientPercentageTwo"/>
+      <input type="range" style="width: 250px" min="0" max="100" step="1" v-model="gradientColor2Percentage">
+      <input type="number" style="width: 60px" v-model="gradientColor2Percentage"/>
       <input type="range" style="width: 250px" min="0" max="360" step="1" v-model="gradientColorAngle">
-      <input type="number" style="width: 35px" v-model="gradientColorAngle"/>
+      <input type="number" style="width: 60px" v-model="gradientColorAngle"/>
       <input type="range" style="width: 250px" min="0" max="10" step="1" v-model="gradientVariable">
-      <input type="number" style="width: 35px" v-model="gradientVariable"/>
+      <input type="number" style="width: 60px" v-model="gradientVariable"/>
       <input type="color" style="width: 250px" v-model="borderColor">
       <input type="range" style="width: 250px" min="0" max="360" step="1" v-model="computedCubeCameraX">
-      <input type="number" style="width: 35px" v-model="computedCubeCameraX"/>
+      <input type="number" style="width: 60px" v-model="computedCubeCameraX"/>
       <input type="range" style="width: 250px" min="0" max="360" step="1" v-model="cubeAnimationArray[1]">
-      <input type="number" style="width: 35px" v-model="cubeAnimationArray[1]"/>
+      <input type="number" style="width: 60px" v-model="cubeAnimationArray[1]"/>
       <input type="range" style="width: 250px" min="0" max="360" step="1" v-model="cubeAnimationArray[2]">
-      <input type="number" style="width: 35px" v-model="cubeAnimationArray[2]"/>
+      <input type="number" style="width: 60px" v-model="cubeAnimationArray[2]"/>
+      <input type="range" style="width: 250px" min="0" max="10" step="0.25" v-model="rectangleSize">
+      <input type="number" style="width: 60px" v-model="rectangleSize"/>
       <br>
 
     </div>
     <div id="cube-test-wrapper" class="cube-test-wrapper">
-      <!--    <div class="hundred-cube-test" v-bind:style="{height: hundredCubesContainerHeightWidth + 'px', width: hundredCubesContainerHeightWidth + 'px', perspective: randomPerspective + 'px',-->
-      <!--                                                  transformStyle: 'preserve-3d',-->
-      <!--                                                  transition: transitionTime + 's ease'}" >-->
-      <!--      <div v-for="(cube, index) in hundredCubes" :key="index" v-bind:style="{transform: `rotateX(${cameraArray[0]}deg) rotateY(${cameraArray[1]}deg) rotateZ(${cameraArray[2]}deg)`,transition: transitionTime + 's ease'}">-->
-      <!--        <Cube :width="hundredCubesHeight" :height="hundredCubesWidth"  :zIndex="index"-->
-      <!--              :perspective="3000" :borderColor="'rgb(66,11,117)'" :cubeColor="'purple'"-->
-      <!--              :cameraArray="cubeAnimationArray" :transitionTime="transitionTime"></Cube>-->
-      <!--      </div>-->
-      <!--    </div>-->
-<!--      <div class="hundred-cube-container" v-bind:style="{height: hundredCubesContainerHeightWidth*1.5 + 'px', width: hundredCubesContainerHeightWidth*1.5 + 'px',transformStyle: 'preserve-3d', transition: transitionTime + 's ease'}" >-->
-<!--&lt;!&ndash;        <div v-for="(number, index) in cubeOfCubesStartArray" :key="index" v-bind:style="{transform: `rotateX(${cameraArray[0]}deg) rotateY(${cameraArray[1]}deg) rotateZ(${cameraArray[2]}deg)`, transformStyle: 'preserve-3d',transition: transitionTime + 's ease'}">&ndash;&gt;-->
-<!--&lt;!&ndash;          <div class="hundred-cube-test" v-bind:style="{height: hundredCubesContainerHeightWidth + 'px', width: hundredCubesContainerHeightWidth + 'px',transform: `translateZ(-${(hundredCubesWidth*index+1)*zTranslate/2}px)`, transition: transitionTime + 's ease', position: 'absolute'}" >&ndash;&gt;-->
-<!--&lt;!&ndash;            <div v-for="(cube,index) in cubeOfCubes"  v-bind:style="{}" :key="index">&ndash;&gt;-->
-<!--&lt;!&ndash;              <Cube :width="hundredCubesWidth" :height="hundredCubesWidth"  :zIndex="index" class="cube"&ndash;&gt;-->
-<!--&lt;!&ndash;                    :borderColor="borderColor" :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage-(index)*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"&ndash;&gt;-->
-<!--&lt;!&ndash;                    :cameraArray="cubeAnimationArray"  :xStagger="(hundredCubesWidth*index/2)*xTranslate" :opacity="opacity" :yStagger="(hundredCubesWidth*index/2)*yTranslate" :transitionTime="transitionTime"></Cube>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--&lt;!&ndash;          </div>&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--      </div>-->
-<!--      <Cube :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"-->
-<!--            :width="100" :height="100" :showControls="true"  :opacity="opacity"></Cube>-->
-      <MultiCube :width="50" :height="50" :showControls="true" :opacity="opacity" :zStagger="zTranslate*50" :xStagger="xTranslate*50" :yStagger="yTranslate*50"  :cameraArray="cubeAnimationArray" :transitionTime="transitionTime" :numberOfCubes="36"
-                 :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
+      <MultiCube :width="50" :height="50" :showControls="true" :opacity="opacity" :zStagger="zTranslate*50" :xStagger="xTranslate*50" :yStagger="yTranslate*50"  :cameraArray="cubeAnimationArray" :transitionTime="transitionTime" :numberOfCubes="9"
+                 :borderColor="borderColor" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
       ></MultiCube>
       <div class="cube-info-container">
         <h2 @click="moveTitlePageOver()" id="title-text">vue3Dcss</h2>
+      </div>
+      <Rectangle :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
+                 :showControls="true" :opacity="opacity" :borderColor="borderColor" :size="rectangleSize">
+      </Rectangle>
+      <Rectangle
+        :showControls="true" :cubeColor="'white'" :opacity="opacity" rectangleType="rail" :borderColor="borderColor" :size="rectangleSize">
+      </Rectangle>
+      <div class="rectangle-cube-test" v-bind:style="{display:'flex', flexFlow: 'column', height: (50+50)+(0.25*1000) + 'px', width: 50 + 'px'}">
+        <Cube :transitionTime="transitionTime" :width="50" :height="50" :opacity="opacity" :cameraArray="cubeAnimationArray">
+        </Cube>
+        <Rectangle :transitionTime="transitionTime" v-bind:style="{transformOrigin: '8% 77%', transform: 'rotate(90deg)'}" :rectangleType="'rail'" :size="0.25" :cameraArray="cubeAnimationArray" :borderColor="borderColor" :opacity="opacity"></Rectangle>
+        <Cube :transitionTime="transitionTime"  v-bind:style="{transform: `translateY(${(0.25*1000) - 25}px)`}" :width="50" :height="50" :opacity="opacity" :cameraArray="cubeAnimationArray">
+        </Cube>
       </div>
     </div>
   </div>
@@ -115,12 +73,14 @@
   import VueMixinTween from 'vue-mixin-tween'
   import Vue from 'vue'
   import MultiCube from "./components/MultiCube";
+  import Rectangle from "./components/Rectangle";
   export default {
     name: 'App',
     components:{
       Cube,
       CameraContainer,
       MultiCube,
+      Rectangle,
     },
     data(){
       return{
@@ -144,7 +104,7 @@
         opacity: 0,
         cubeLayer: 3,
         cubeLayerCount: 0,
-        gradientVariable: 5,
+        gradientVariable: 3,
         hundredCubesContainerHeightWidth: 0,
         gradientColor1: '#000000',
         gradientColor2: '#FFFFFF',
@@ -158,16 +118,7 @@
         tweenedCubeCameraX: 0,
         tweenedCubeCameraY: 0,
         tweenedCubeCameraZ: 0,
-        textArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-          0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-          1,1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,
-          1,0,1,0,1,0,1,0,1,0,0,1,0,0,0,1,0,0,0,0,0,
-          1,0,0,0,1,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,
-          1,0,0,0,1,0,1,0,1,0,0,1,0,0,0,1,0,0,0,0,
-          0,0,0,0,0,1,1,0,0,1,1,1,0,1,0,1,0,0,0,0,
-          0,0,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,0,0,0,
-          0,0,0,0,0,1,0,1,0,1,1,1,0,0,1,0,0,0,0,0,
-          0,0,0,0,0,1,1,0,0,1,0,1,0,0,1,0,0,0,0,0]
+        rectangleSize: 1,
       }
     },
     methods:{
