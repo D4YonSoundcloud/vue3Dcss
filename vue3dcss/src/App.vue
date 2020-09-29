@@ -45,7 +45,7 @@
         <circle cx="12" cy="12" r="9" />
         <polyline points="12 7 12 12 15 15" />
       </svg>
-      <input type="range" style="width: 250px" min="1" max="50" step="1" v-model="zTranslate">
+      <input type="range" style="width: 250px" min="0" max="2" step="0.25" v-model="zTranslate">
       <input type="number" style="width: 35px" v-model="zTranslate"/>
       <input type="range" style="width: 250px" min="0" max="2" step="0.25" v-model="xTranslate">
       <input type="number" style="width: 35px" v-model="xTranslate"/>
@@ -76,34 +76,34 @@
 
     </div>
     <div id="cube-test-wrapper" class="cube-test-wrapper">
-<!--    <div class="hundred-cube-test" v-bind:style="{height: hundredCubesContainerHeightWidth + 'px', width: hundredCubesContainerHeightWidth + 'px', perspective: randomPerspective + 'px',-->
-<!--                                                  transformStyle: 'preserve-3d',-->
-<!--                                                  transition: transitionTime + 's ease'}" >-->
-<!--      <div v-for="(cube, index) in hundredCubes" :key="index" v-bind:style="{transform: `rotateX(${cameraArray[0]}deg) rotateY(${cameraArray[1]}deg) rotateZ(${cameraArray[2]}deg)`,transition: transitionTime + 's ease'}">-->
-<!--        <Cube :width="hundredCubesHeight" :height="hundredCubesWidth"  :zIndex="index"-->
-<!--              :perspective="3000" :borderColor="'rgb(66,11,117)'" :cubeColor="'purple'"-->
-<!--              :cameraArray="cubeAnimationArray" :transitionTime="transitionTime"></Cube>-->
+      <!--    <div class="hundred-cube-test" v-bind:style="{height: hundredCubesContainerHeightWidth + 'px', width: hundredCubesContainerHeightWidth + 'px', perspective: randomPerspective + 'px',-->
+      <!--                                                  transformStyle: 'preserve-3d',-->
+      <!--                                                  transition: transitionTime + 's ease'}" >-->
+      <!--      <div v-for="(cube, index) in hundredCubes" :key="index" v-bind:style="{transform: `rotateX(${cameraArray[0]}deg) rotateY(${cameraArray[1]}deg) rotateZ(${cameraArray[2]}deg)`,transition: transitionTime + 's ease'}">-->
+      <!--        <Cube :width="hundredCubesHeight" :height="hundredCubesWidth"  :zIndex="index"-->
+      <!--              :perspective="3000" :borderColor="'rgb(66,11,117)'" :cubeColor="'purple'"-->
+      <!--              :cameraArray="cubeAnimationArray" :transitionTime="transitionTime"></Cube>-->
+      <!--      </div>-->
+      <!--    </div>-->
+<!--      <div class="hundred-cube-container" v-bind:style="{height: hundredCubesContainerHeightWidth*1.5 + 'px', width: hundredCubesContainerHeightWidth*1.5 + 'px',transformStyle: 'preserve-3d', transition: transitionTime + 's ease'}" >-->
+<!--&lt;!&ndash;        <div v-for="(number, index) in cubeOfCubesStartArray" :key="index" v-bind:style="{transform: `rotateX(${cameraArray[0]}deg) rotateY(${cameraArray[1]}deg) rotateZ(${cameraArray[2]}deg)`, transformStyle: 'preserve-3d',transition: transitionTime + 's ease'}">&ndash;&gt;-->
+<!--&lt;!&ndash;          <div class="hundred-cube-test" v-bind:style="{height: hundredCubesContainerHeightWidth + 'px', width: hundredCubesContainerHeightWidth + 'px',transform: `translateZ(-${(hundredCubesWidth*index+1)*zTranslate/2}px)`, transition: transitionTime + 's ease', position: 'absolute'}" >&ndash;&gt;-->
+<!--&lt;!&ndash;            <div v-for="(cube,index) in cubeOfCubes"  v-bind:style="{}" :key="index">&ndash;&gt;-->
+<!--&lt;!&ndash;              <Cube :width="hundredCubesWidth" :height="hundredCubesWidth"  :zIndex="index" class="cube"&ndash;&gt;-->
+<!--&lt;!&ndash;                    :borderColor="borderColor" :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage-(index)*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"&ndash;&gt;-->
+<!--&lt;!&ndash;                    :cameraArray="cubeAnimationArray"  :xStagger="(hundredCubesWidth*index/2)*xTranslate" :opacity="opacity" :yStagger="(hundredCubesWidth*index/2)*yTranslate" :transitionTime="transitionTime"></Cube>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
 <!--      </div>-->
-<!--    </div>-->
-      <div class="hundred-cube-container" v-bind:style="{height: hundredCubesContainerHeightWidth*1.5 + 'px', width: hundredCubesContainerHeightWidth*1.5 + 'px',transformStyle: 'preserve-3d', transition: transitionTime + 's ease'}" >
-        <div v-for="(number, index) in cubeOfCubesStartArray" :key="index" v-bind:style="{transform: `rotateX(${cameraArray[0]}deg) rotateY(${cameraArray[1]}deg) rotateZ(${cameraArray[2]}deg)`, transformStyle: 'preserve-3d',transition: transitionTime + 's ease'}">
-          <div class="hundred-cube-test" v-bind:style="{height: hundredCubesContainerHeightWidth + 'px', width: hundredCubesContainerHeightWidth + 'px',transform: `translateZ(-${(hundredCubesWidth*index+1)*zTranslate/2}px)`, transition: transitionTime + 's ease', position: 'absolute'}" >
-            <div v-for="(cube,index) in cubeOfCubes"  v-bind:style="{}" :key="index">
-                <Cube :width="hundredCubesWidth" :height="hundredCubesWidth"  :zIndex="index" class="cube"
-                      :borderColor="borderColor" :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage-(index)*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
-                      :cameraArray="cubeAnimationArray"  :xStagger="(hundredCubesWidth*index/2)*xTranslate" :opacity="opacity" :yStagger="(hundredCubesWidth*index/2)*yTranslate" :transitionTime="transitionTime"></Cube>
-            </div>
-          </div>
-        </div>
-        <div class="cube-info-container">
-          <h2 @click="moveTitlePageOver()" id="title-text">vue3Dcss</h2>
-        </div>
-      </div>
-      <Cube :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
-        :width="100" :height="100" :showControls="true"  :opacity="opacity"></Cube>
-      <MultiCube :width="50" :height="50" :showControls="true" :opacity="opacity"
+<!--      <Cube :cubeColor="'purple'" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"-->
+<!--            :width="100" :height="100" :showControls="true"  :opacity="opacity"></Cube>-->
+      <MultiCube :width="50" :height="50" :showControls="true" :opacity="opacity" :zStagger="zTranslate*50" :xStagger="xTranslate*50" :yStagger="yTranslate*50"  :cameraArray="cubeAnimationArray" :transitionTime="transitionTime" :numberOfCubes="36"
                  :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
       ></MultiCube>
+      <div class="cube-info-container">
+        <h2 @click="moveTitlePageOver()" id="title-text">vue3Dcss</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -115,179 +115,178 @@
   import VueMixinTween from 'vue-mixin-tween'
   import Vue from 'vue'
   import MultiCube from "./components/MultiCube";
-
-export default {
-  name: 'App',
-  components:{
-    Cube,
-    CameraContainer,
-    MultiCube,
-  },
-  data(){
-    return{
-      randomNumber: Math.floor(Math.random() * Math.floor(500)),
-      randomPerspective: Math.random() * (6000 - 600) + 600,
-      hundredCubes: [],
-      hundredCubesHeight: 75,
-      hundredCubesWidth: 75,
-      textCubeWidth: 10,
-      cubeAnimationArray: [0,0,0],
-      transitionTime: 5,
-      cameraArray: [0,0,45],
-      cubeCameraX: 0,
-      cubeCameraY: 0,
-      cubeCameraZ: 0,
-      cubeOfCubes:[],
-      cubeOfCubesStartArray: [1],
-      zTranslate: 9,
-      yTranslate: 0,
-      xTranslate: 0,
-      opacity: 0,
-      cubeLayer: 3,
-      cubeLayerCount: 0,
-      gradientVariable: 5,
-      hundredCubesContainerHeightWidth: 0,
-      gradientColor1: '#000000',
-      gradientColor2: '#FFFFFF',
-      gradientColor1Percentage: 0,
-      gradientColor2Percentage: 10,
-      gradientColorAngle: 45,
-      borderColor: 'rgba(0,0,0,1)',
-      tweenedGradient: 45,
-      tweenedGradientOne: 0,
-      tweenedGradientTwo: 10,
-      tweenedCubeCameraX: 0,
-      tweenedCubeCameraY: 0,
-      tweenedCubeCameraZ: 0,
-      textArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                  1,1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,
-                  1,0,1,0,1,0,1,0,1,0,0,1,0,0,0,1,0,0,0,0,0,
-                  1,0,0,0,1,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,
-                  1,0,0,0,1,0,1,0,1,0,0,1,0,0,0,1,0,0,0,0,
-                  0,0,0,0,0,1,1,0,0,1,1,1,0,1,0,1,0,0,0,0,
-                  0,0,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,0,0,0,
-                  0,0,0,0,0,1,0,1,0,1,1,1,0,0,1,0,0,0,0,0,
-                  0,0,0,0,0,1,1,0,0,1,0,1,0,0,1,0,0,0,0,0]
-    }
-  },
-  methods:{
-    backToTitle(){
-      let tl = gsap.timeline
-      tl.to('#second-page-wrapper', {duration: 1, opacity: 0, x: -500})
-      tl.fromTo('#cube-test-wrapper', {opacity: 0, x:500},{duration: 1, opacity: 1, x: 0}, "<0.5")
+  export default {
+    name: 'App',
+    components:{
+      Cube,
+      CameraContainer,
+      MultiCube,
     },
-    moveTitlePageOver(){
-      let tl = gsap.timeline
-      tl.to('#cube-test-wrapper', {duration: 1, opacity: 0, x: -500})
-      tl.fromTo('#second-page-wrapper', {opacity: 0, x:500},{duration: 1, opacity: 1, x: 0}, "<0.5")
+    data(){
+      return{
+        randomNumber: Math.floor(Math.random() * Math.floor(500)),
+        randomPerspective: Math.random() * (6000 - 600) + 600,
+        hundredCubes: [],
+        hundredCubesHeight: 75,
+        hundredCubesWidth: 75,
+        textCubeWidth: 10,
+        cubeAnimationArray: [0,0,0],
+        transitionTime: 5,
+        cameraArray: [0,0,45],
+        cubeCameraX: 0,
+        cubeCameraY: 0,
+        cubeCameraZ: 0,
+        cubeOfCubes:[],
+        cubeOfCubesStartArray: [1],
+        zTranslate: 0.5,
+        yTranslate: 0.5,
+        xTranslate: 1.25,
+        opacity: 0,
+        cubeLayer: 3,
+        cubeLayerCount: 0,
+        gradientVariable: 5,
+        hundredCubesContainerHeightWidth: 0,
+        gradientColor1: '#000000',
+        gradientColor2: '#FFFFFF',
+        gradientColor1Percentage: 0,
+        gradientColor2Percentage: 10,
+        gradientColorAngle: 45,
+        borderColor: 'rgba(0,0,0,1)',
+        tweenedGradient: 45,
+        tweenedGradientOne: 0,
+        tweenedGradientTwo: 10,
+        tweenedCubeCameraX: 0,
+        tweenedCubeCameraY: 0,
+        tweenedCubeCameraZ: 0,
+        textArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+          0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+          1,1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,
+          1,0,1,0,1,0,1,0,1,0,0,1,0,0,0,1,0,0,0,0,0,
+          1,0,0,0,1,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,
+          1,0,0,0,1,0,1,0,1,0,0,1,0,0,0,1,0,0,0,0,
+          0,0,0,0,0,1,1,0,0,1,1,1,0,1,0,1,0,0,0,0,
+          0,0,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,0,0,0,
+          0,0,0,0,0,1,0,1,0,1,1,1,0,0,1,0,0,0,0,0,
+          0,0,0,0,0,1,1,0,0,1,0,1,0,0,1,0,0,0,0,0]
+      }
     },
-    addCube(){
-      this.cubeLayer = this.cubeLayer + 1;
+    methods:{
+      backToTitle(){
+        let tl = gsap.timeline
+        tl.to('#second-page-wrapper', {duration: 1, opacity: 0, x: -500})
+        tl.fromTo('#cube-test-wrapper', {opacity: 0, x:500},{duration: 1, opacity: 1, x: 0}, "<0.5")
+      },
+      moveTitlePageOver(){
+        let tl = gsap.timeline
+        tl.to('#cube-test-wrapper', {duration: 1, opacity: 0, x: -500})
+        tl.fromTo('#second-page-wrapper', {opacity: 0, x:500},{duration: 1, opacity: 1, x: 0}, "<0.5")
+      },
+      addCube(){
+        this.cubeLayer = this.cubeLayer + 1;
+      },
+      addCubeLayer(){
+        this.cubeOfCubesStartArray.push(this.cubeOfCubesStartArray[this.cubeLayerCount] + 1);
+      },
+      deleteCube(){
+        if(this.cubeLayer === 1) return;
+        this.cubeLayer = this.cubeLayer - 1;
+      },
+      deleteCubeLayer(){
+        if(this.cubeLayer === 1) return;
+        this.cubeOfCubesStartArray.pop();
+      }
     },
-    addCubeLayer(){
-      this.cubeOfCubesStartArray.push(this.cubeOfCubesStartArray[this.cubeLayerCount] + 1);
+    watch:{
+      cubeLayer(){
+        this.cubeOfCubes = [];
+        this.hundredCubesContainerHeightWidth = this.hundredCubesWidth*this.cubeLayer;
+        console.log(this.hundredCubesContainerHeightWidth)
+        for(let i = 0; i < (this.cubeLayer*this.cubeLayer); i++){
+          this.cubeOfCubes.push(i);
+          console.log(this.cubeOfCubes);
+        }
+      },
+      gradientColorAngle(newVal){
+        gsap.to(this.$data, { duration: this.transitionTime, tweenedGradient: newVal });
+      },
+      gradientColor1Percentage(newVal){
+        gsap.to(this.$data, { duration: this.transitionTime, tweenedGradientOne: newVal });
+      },
+      gradientColor2Percentage(newVal){
+        gsap.to(this.$data, { duration: this.transitionTime, tweenedGradientTwo: newVal });
+      },
+      cubeCameraX(newVal){
+        gsap.to(this.$data, { duration: this.transitionTime, tweenedCubeCameraX: newVal });
+      },
+      // cubeCameraY(newVal){
+      //   gsap.to(this.$data, { duration: this.transitionTime, tweenedCubeCameraY: newVal });
+      // },
+      // cubeCameraZ(newVal){
+      //   gsap.to(this.$data, { duration: this.transitionTime, tweenedCubeCameraZ: newVal });
+      // }
     },
-    deleteCube(){
-      if(this.cubeLayer === 1) return;
-      this.cubeLayer = this.cubeLayer - 1;
+    computed:{
+      // hundredCubesContainerHeightWidth(){
+      //   return (this.hundredCubesWidth*this.cubeLayer);
+      // },
+      computedGradientPercentage(){
+        return this.tweenedGradient.toFixed();
+      },
+      computedGradientPercentageOne(){
+        return this.tweenedGradientOne.toFixed();
+      },
+      computedGradientPercentageTwo(){
+        return this.tweenedGradientTwo.toFixed();
+      },
+      computedCubeCameraX(){
+        return this.tweenedCubeCameraX.toFixed();
+      },
+      computedCubeCameraY(){
+        return this.tweenedCubeCameraY.toFixed();
+      },
+      computedCubeCameraZ(){
+        return this.tweenedCubeCameraZ.toFixed();
+      },
     },
-    deleteCubeLayer(){
-      if(this.cubeLayer === 1) return;
-      this.cubeOfCubesStartArray.pop();
-    }
-  },
-  watch:{
-    cubeLayer(){
-      this.cubeOfCubes = [];
-      this.hundredCubesContainerHeightWidth = this.hundredCubesWidth*this.cubeLayer;
-      console.log(this.hundredCubesContainerHeightWidth)
+    created(){
       for(let i = 0; i < (this.cubeLayer*this.cubeLayer); i++){
         this.cubeOfCubes.push(i);
         console.log(this.cubeOfCubes);
       }
+      this.hundredCubesContainerHeightWidth = this.hundredCubesWidth*this.cubeLayer
     },
-    gradientColorAngle(newVal){
-      gsap.to(this.$data, { duration: this.transitionTime, tweenedGradient: newVal });
-    },
-    gradientColor1Percentage(newVal){
-      gsap.to(this.$data, { duration: this.transitionTime, tweenedGradientOne: newVal });
-    },
-    gradientColor2Percentage(newVal){
-      gsap.to(this.$data, { duration: this.transitionTime, tweenedGradientTwo: newVal });
-    },
-    cubeCameraX(newVal){
-      gsap.to(this.$data, { duration: this.transitionTime, tweenedCubeCameraX: newVal });
-    },
-    // cubeCameraY(newVal){
-    //   gsap.to(this.$data, { duration: this.transitionTime, tweenedCubeCameraY: newVal });
-    // },
-    // cubeCameraZ(newVal){
-    //   gsap.to(this.$data, { duration: this.transitionTime, tweenedCubeCameraZ: newVal });
-    // }
-  },
-  computed:{
-    // hundredCubesContainerHeightWidth(){
-    //   return (this.hundredCubesWidth*this.cubeLayer);
-    // },
-    computedGradientPercentage(){
-      return this.tweenedGradient.toFixed();
-    },
-    computedGradientPercentageOne(){
-      return this.tweenedGradientOne.toFixed();
-    },
-    computedGradientPercentageTwo(){
-      return this.tweenedGradientTwo.toFixed();
-    },
-    computedCubeCameraX(){
-      return this.tweenedCubeCameraX.toFixed();
-    },
-    computedCubeCameraY(){
-      return this.tweenedCubeCameraY.toFixed();
-    },
-    computedCubeCameraZ(){
-      return this.tweenedCubeCameraZ.toFixed();
-    },
-  },
-  created(){
-    for(let i = 0; i < (this.cubeLayer*this.cubeLayer); i++){
-      this.cubeOfCubes.push(i);
-      console.log(this.cubeOfCubes);
+    mounted(){
+      // let myFunc = () => {
+      //   console.log('happening')
+      //   let x = 360;
+      //   let y = 360;
+      //   this.cubeAnimationArray = [x,y,0]
+      //   setTimeout(()=>{
+      //     this.cubeAnimationArray = [0,0,0];
+      //     setTimeout(()=>{
+      //       myFunc();
+      //     }, ((this.transitionTime*1000)/2))
+      //   }, ((this.transitionTime*1000))/2)
+      // }
+      // this.$nextTick(() => myFunc())
+      setInterval(()=>{
+        this.gradientColorAngle = this.gradientColorAngle + 1;
+      },this.transitionTime)
+      setInterval(()=>{
+        Vue.set(this.cubeAnimationArray, 0, this.cubeAnimationArray[0] + 45)
+        Vue.set(this.cubeAnimationArray, 1, this.cubeAnimationArray[1] - 45)
+        // Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 180)
+        console.log(this.cubeAnimationArray);
+      }, this.transitionTime*1000)
+      setTimeout(()=>{
+        this.opacity = 85;
+      },((this.transitionTime*1000))/2 )
+      setTimeout(()=>{
+        this.yTranslate = 0.25;
+      },((this.transitionTime*1000)/2))
+      this.$nextTick(()=>{ gsap.fromTo('#title-text', { y: 0, x: 50, opacity: 0},{duration: 1, y: -25, opacity: 1, delay: this.transitionTime})})
     }
-    this.hundredCubesContainerHeightWidth = this.hundredCubesWidth*this.cubeLayer
-  },
-  mounted(){
-    // let myFunc = () => {
-    //   console.log('happening')
-    //   let x = 360;
-    //   let y = 360;
-    //   this.cubeAnimationArray = [x,y,0]
-    //   setTimeout(()=>{
-    //     this.cubeAnimationArray = [0,0,0];
-    //     setTimeout(()=>{
-    //       myFunc();
-    //     }, ((this.transitionTime*1000)/2))
-    //   }, ((this.transitionTime*1000))/2)
-    // }
-    // this.$nextTick(() => myFunc())
-    setInterval(()=>{
-      this.gradientColorAngle = this.gradientColorAngle + 1;
-    },this.transitionTime)
-    setInterval(()=>{
-      Vue.set(this.cubeAnimationArray, 0, this.cubeAnimationArray[0] + 45)
-      Vue.set(this.cubeAnimationArray, 1, this.cubeAnimationArray[1] - 45)
-      // Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 180)
-      console.log(this.cubeAnimationArray);
-    }, this.transitionTime*1000)
-    setTimeout(()=>{
-      this.opacity = 85;
-    },((this.transitionTime*1000))/2 )
-    setTimeout(()=>{
-      this.yTranslate = 0.25;
-    },((this.transitionTime*1000)/2))
-    this.$nextTick(()=>{ gsap.fromTo('#title-text', { y: 50, opacity: 0},{duration: 1, y: 0, opacity: 1, delay: this.transitionTime+1})})
   }
-}
 </script>
 
 <style scoped>
@@ -297,52 +296,51 @@ export default {
     padding: 0;
     font-family: 'Poppins', sans-serif;
   }
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  display: flex;
-  flex-flow: row;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-}
-
-.hundred-cube-test{
-  display: flex;
-  flex-flow: row wrap;
-  perspective: 3000px;
-  justify-content: center;
-  align-items: center;
-  transform-origin: top;
-}
+  #app {
+    overflow:hidden;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+  }
+  .hundred-cube-test{
+    display: flex;
+    flex-flow: row wrap;
+    perspective: 3000px;
+    justify-content: center;
+    align-items: center;
+    transform-origin: top;
+  }
   .hundred-cube-container{
     display: flex;
     flex-flow: row;
     justify-content: space-between;
     align-items: center;
   }
-.cube-test-wrapper{
-
-}
-.cube-info-container{
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 25%;
-  height: 100%;
-  transform: translateY(25%);
-}
-
-.cube:hover{
-  opacity: 10%;
-  transform: scale(1.15);
-}
-
+  .cube-test-wrapper{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cube-info-container{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 25%;
+    height: 100%;
+  }
+  .cube:hover{
+    opacity: 10%;
+    transform: scale(1.15);
+  }
   .camera-controls{
     position: absolute;
     top: 0;
@@ -366,14 +364,12 @@ export default {
     border: 1px solid #efefef;
     transform: translateY(8px);
   }
-
   input[type='range']:active{
     outline: none;
   }
   input[type='range']:focus{
     outline: none;
   }
-
   h2{
     opacity: 0;
     cursor: pointer;
@@ -381,16 +377,14 @@ export default {
   }
   h2#title-text:hover{
     opacity: 50% !important;
-    transform: scale(1.025) !important;
+    transform: scale(1.025) translateX(50)!important;
   }
-
   input[type='range']::-webkit-slider-runnable-track {
     height: 25px;
     -webkit-appearance: none;
     color: #022732;
     margin-top: -1px;
   }
-
   input[type='range']::-webkit-slider-thumb {
     margin-top: 3px;
     width: 30px;
