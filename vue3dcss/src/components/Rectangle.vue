@@ -1,7 +1,7 @@
 <template>
     <div class="rectangle-container" v-bind:style="rectangleContainer">
       <div class="camera-controls" v-if="showControls">
-        <input type="range" style="width: 150px" min="500" max="6000" step="10" v-model="perspective">-->
+        <input type="range" style="width: 150px" min="500" max="6000" step="10" v-model="perspective">
         <input type="number" style="width: 50px" v-model="perspective"/>
         <input type="range" style="width: 150px" min="0" max="360" step="1" v-model="cameraArray[0]">
         <input type="number" style="width: 50px" v-model="cameraArray[0]"/>
@@ -90,7 +90,7 @@
       },
       cubeColor:{
         type: String,
-        default: 'rgb(235,235,235)'
+        default: 'white'
       },
       cameraArray:{
         type: Array,
