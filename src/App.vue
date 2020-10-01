@@ -43,31 +43,35 @@
 
     </div>
     <div id="cube-test-wrapper" class="cube-test-wrapper">
-      <MultiCube :width="50" :height="50" :showControls="true" :opacity="opacity" :zStagger="zTranslate*50" :xStagger="xTranslate*50" :yStagger="yTranslate*50"  :cameraArray="cubeAnimationArray" :transitionTime="transitionTime" :numberOfCubes="9"
-                 :borderColor="borderColor" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
-      ></MultiCube>
+<!--      <MultiCube :width="50" :height="50" :showControls="true" :opacity="opacity" :zStagger="zTranslate*50" :xStagger="xTranslate*50" :yStagger="yTranslate*50"  :cameraArray="cubeAnimationArray" :transitionTime="transitionTime" :numberOfCubes="9"-->
+<!--                 :borderColor="borderColor" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"-->
+<!--      ></MultiCube>-->
       <div class="cube-info-container">
         <h2 @click="moveTitlePageOver()" id="title-text">vue3Dcss</h2>
       </div>
-      <Rectangle :transitionTime="transitionTime" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
-                 :opacity="opacity" :borderColor="borderColor" :size="rectangleSize" :cameraArray="cubeAnimationArray">
-      </Rectangle>
-      <Rectangle :transitionTime="transitionTime"
-        :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
-        :showControls="true" :cameraArray="cubeAnimationArray" :cubeColor="'white'" :opacity="opacity" rectangleType="rail" :borderColor="borderColor" :size="rectangleSize">
-      </Rectangle>
-      <div class="rectangle-cube-test" v-bind:style="{display:'flex', flexFlow: 'column', height: (50+50)+(0.25*1000) + 'px', width: 50 + 'px'}">
-<!--        <Cube :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"-->
-<!--          :transitionTime="transitionTime" :width="50" :height="50" :opacity="opacity" :cameraArray="cubeAnimationArray">-->
-<!--        </Cube>-->
-        <Rectangle
-          :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"
-          :transitionTime="transitionTime" :cubeColor="gradientColor2" v-bind:style="{transformOrigin: '8% 77%', transform: 'rotate(90deg)'}" :rectangleType="'rail'" :size="0.25" :cameraArray="cubeAnimationArray" :borderColor="borderColor" :opacity="opacity"></Rectangle>
-<!--        <Cube-->
+<!--      <Rectangle :transitionTime="transitionTime" :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"-->
+<!--                 :opacity="opacity" :borderColor="borderColor" :size="rectangleSize" :cameraArray="cubeAnimationArray">-->
+<!--      </Rectangle>-->
+<!--      <Rectangle :transitionTime="transitionTime"-->
+<!--        :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"-->
+<!--        :showControls="true" :cameraArray="cubeAnimationArray" :cubeColor="'white'" :opacity="opacity" rectangleType="rail" :borderColor="borderColor" :size="rectangleSize">-->
+<!--      </Rectangle>-->
+<!--      <div class="rectangle-cube-test" v-bind:style="{display:'flex', flexFlow: 'column', height: (50+50)+(0.25*1000) + 'px', width: 50 + 'px'}">-->
+<!--&lt;!&ndash;        <Cube :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"&ndash;&gt;-->
+<!--&lt;!&ndash;          :transitionTime="transitionTime" :width="50" :height="50" :opacity="opacity" :cameraArray="cubeAnimationArray">&ndash;&gt;-->
+<!--&lt;!&ndash;        </Cube>&ndash;&gt;-->
+<!--        <Rectangle-->
 <!--          :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"-->
-<!--          :transitionTime="transitionTime"  v-bind:style="{transform: `translateY(${(0.25*1000) - 25}px)`}" :width="50" :height="50" :opacity="opacity" :cameraArray="cubeAnimationArray">-->
-<!--        </Cube>-->
-      </div>
+<!--          :transitionTime="transitionTime" :cubeColor="gradientColor2" v-bind:style="{transformOrigin: '8% 77%', transform: 'rotate(90deg)'}" :rectangleType="'rail'" :size="0.25" :cameraArray="cubeAnimationArray" :borderColor="borderColor" :opacity="opacity"></Rectangle>-->
+<!--&lt;!&ndash;        <Cube&ndash;&gt;-->
+<!--&lt;!&ndash;          :gradient="`linear-gradient(${computedGradientPercentage*gradientVariable}deg, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%, ${gradientColor1} ${computedGradientPercentageOne}%, ${gradientColor2} ${computedGradientPercentageTwo}%)`"&ndash;&gt;-->
+<!--&lt;!&ndash;          :transitionTime="transitionTime"  v-bind:style="{transform: `translateY(${(0.25*1000) - 25}px)`}" :width="50" :height="50" :opacity="opacity" :cameraArray="cubeAnimationArray">&ndash;&gt;-->
+<!--&lt;!&ndash;        </Cube>&ndash;&gt;-->
+<!--      </div>-->
+      <ShadedCube :cameraArray="cubeAnimationArray" :borderColor="borderColor" :height="hundredCubesWidth" :width="hundredCubesWidth"
+                  :opacity="opacity" :showControls="true" :transitionTime="transitionTime"></ShadedCube>
+      <ShadedCube :cameraArray="[cubeAnimationArray[0]*-1,cubeAnimationArray[1]*-1,cubeAnimationArray[2]*-1 ]" :borderColor="borderColor" :height="hundredCubesWidth*1.5" :width="hundredCubesWidth*1.5" :xStagger="xTranslate*50" :yStagger="yTranslate*50"
+                  :opacity="opacity" :showControls="true" :cubeColor="gradientColor1" :transitionTime="transitionTime"></ShadedCube>
     </div>
   </div>
 </template>
@@ -80,6 +84,7 @@
   import Vue from 'vue'
   import MultiCube from "./components/MultiCube";
   import Rectangle from "./components/Rectangle";
+  import ShadedCube from "./components/ShadedCube";
   export default {
     name: 'App',
     components:{
@@ -87,6 +92,7 @@
       CameraContainer,
       MultiCube,
       Rectangle,
+      ShadedCube,
     },
     data(){
       return{
@@ -97,7 +103,7 @@
         hundredCubesWidth: 75,
         textCubeWidth: 10,
         cubeAnimationArray: [0,0,0],
-        transitionTime: 10,
+        transitionTime: 5,
         cameraArray: [0,0,45],
         cubeCameraX: 0,
         cubeCameraY: 0,
@@ -231,14 +237,15 @@
       },this.transitionTime)
       setInterval(()=>{
         Vue.set(this.cubeAnimationArray, 0, this.cubeAnimationArray[0] + 45)
-        Vue.set(this.cubeAnimationArray, 1, this.cubeAnimationArray[1] - 45)
+        Vue.set(this.cubeAnimationArray, 1, this.cubeAnimationArray[1] + 135)
+        Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 90)
         // Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 180)
         console.log(this.cubeAnimationArray);
       }, this.transitionTime*1000)
       setTimeout(()=>{
         this.rectangleSize = 0.25;
-        this.opacity = 85;
-      },((this.transitionTime*1000))/2 )
+        this.opacity = 99;
+      },((this.transitionTime*1000)))
       setTimeout(()=>{
         this.yTranslate = 0.25;
       },((this.transitionTime*1000)/2))

@@ -1,5 +1,5 @@
 <template>
-  <div class="cube-wrapper" v-bind:style="cuberContainer">
+  <div :class="'cube-wrapper'" id="scene" v-bind:style="cuberContainer">
     <div class="camera-controls" v-if="showControls">
       <input type="range" style="width: 150px" min="500" max="6000" step="10" v-model="perspective">
       <input type="number" style="width: 25px" v-model="perspective"/>
@@ -45,17 +45,106 @@
 <!--      <div class="bottom-face" v-bind:style="bottomFace"></div>-->
 <!--      <div class="top-face" v-bind:style="topFace"></div>-->
 <!--    </div>-->
-    <div class="test-cube" v-bind:style="cube" id="test-cube" >
-      <div class="face-one" id="face-one" v-bind:style="faceOne">1</div>
+    <div :class="'test-cube'" v-bind:style="rotateCubeAnimation ? cubeAnimation : cube" id="test-cube" >
+      <div class="face" id="face-one" v-bind:style="faceOne"></div>
+      <div class="face" id="face-two" v-bind:style="faceTwo" ></div>
+      <div class="face" id="face-three" v-bind:style="faceThree"></div>
+      <div class="face" id="face-four" v-bind:style="faceFour"></div>
+      <div class="face" id="face-five" v-bind:style="faceFive"></div>
+      <div class="face" id="face-six" v-bind:style="faceSix"></div>
     </div>
+    <div class="light" id="light" v-bind:style="light"></div>
   </div>
 </template>
 <script>
+  let Vect3 = {
+    create: function(x, y, z) {
+      return {x: x || 0, y: y || 0, z: z || 0};
+    },
+    add: function(v1, v2) {
+      return {x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z};
+    },
+    sub: function(v1, v2) {
+      return {x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z};
+    },
+    mul: function(v1, v2) {
+      return {x: v1.x * v2.x, y: v1.y * v2.y, z: v1.z * v2.z};
+    },
+    div: function(v1, v2) {
+      return {x: v1.x / v2.x, y: v1.y / v2.y, z: v1.z / v2.z};
+    },
+    muls: function(v, s) {
+      return {x: v.x * s, y: v.y * s, z: v.z * s};
+    },
+    divs: function(v, s) {
+      return {x: v.x / s, y: v.y / s, z: v.z / s};
+    },
+    len: function(v) {
+      return Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    },
+    dot: function(v1, v2) {
+      return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+    },
+    cross: function(v1, v2) {
+      return {x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z, z: v1.x * v2.y - v1.y * v2.x};
+    },
+    normalize: function(v) {
+      return Vect3.divs(v, Vect3.len(v));
+    },
+    ang: function(v1, v2) {
+      return Math.acos(Vect3.dot(v1, v2) / (Vect3.len(v1) * Vect3.len(v2)));
+    },
+    copy: function(v) {
+      return {x: v.x, y: v.y, z: v.z};
+    },
+    equal: function(v1,v2) {
+      return v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
+    },
+    rotate: function(v1, v2) {
+      var x1 = v1.x,
+        y1 = v1.y,
+        z1 = v1.z,
+        angleX = v2.x / 2,
+        angleY = v2.y / 2,
+        angleZ = v2.z / 2,
+
+        cr = Math.cos(angleX),
+        cp = Math.cos(angleY),
+        cy = Math.cos(angleZ),
+        sr = Math.sin(angleX),
+        sp = Math.sin(angleY),
+        sy = Math.sin(angleZ),
+
+        w = cr * cp * cy + -sr * sp * sy,
+        x = sr * cp * cy - -cr * sp * sy,
+        y = cr * sp * cy + sr * cp * -sy,
+        z = cr * cp * sy - -sr * sp * cy,
+
+        m0 = 1 - 2 * ( y * y + z * z ),
+        m1 = 2 * (x * y + z * w),
+        m2 = 2 * (x * z - y * w),
+
+        m4 = 2 * ( x * y - z * w ),
+        m5 = 1 - 2 * ( x * x + z * z ),
+        m6 = 2 * (z * y + x * w ),
+
+        m8 = 2 * ( x * z + y * w ),
+        m9 = 2 * ( y * z - x * w ),
+        m10 = 1 - 2 * ( x * x + y * y );
+
+      return {
+        x: x1 * m0 + y1 * m4 + z1 * m8,
+        y: x1 * m1 + y1 * m5 + z1 * m9,
+        z: x1 * m2 + y1 * m6 + z1 * m10
+      };
+    }
+  };
+
   export default {
     name: "ShadedCube",
     data(){
       return{
-        translateX: 0,
+        translateX: -400,
         translateY: 0,
         translateZ: 0,
         showMarkers: false,
@@ -81,7 +170,7 @@
       },
       cubeColor:{
         type: String,
-        default: 'rgb(235,235,235)'
+        default: '#013249'
       },
       cameraArray:{
         type: Array,
@@ -124,78 +213,85 @@
       gradient:{
         type: String,
       },
+      rotateCubeAnimation: {
+        type: Boolean,
+        default: false,
+      }
     },
     watch:{
       translateX(){
         let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
         setTimeout(() => {
-          let endMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-          let matrixToSend = this.arrayToMatrix(this.parseMatrix(endMatrix), 4)
-          this.getTransformData(document.getElementById('test-cube'), matrixToSend)
-          console.log(this.parseMatrix(endMatrix))
+          this.getTransformData(document.getElementById('test-cube'))
+          console.log(this.getTransformData(document.getElementById('test-cube')))
         }, this.transitionTime * 1000)
         console.log(this.parseMatrix(startMatrix))
-        console.log(this.arrayToMatrix(this.parseMatrix(startMatrix), 3))
+        console.log(this.parseMatrix(startMatrix))
         console.log(startMatrix)
       },
       translateY(){
         let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
         setTimeout(() => {
-          let endMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-          let matrixToSend = this.arrayToMatrix(this.parseMatrix(endMatrix), 4)
-          console.log(this.arrayToMatrix(this.parseMatrix(endMatrix), 4))
-          this.getTransformData(document.getElementById('test-cube'), matrixToSend)
+          this.getTransformData(document.getElementById('test-cube'))
+          console.log(this.getTransformData(document.getElementById('test-cube')))
         }, this.transitionTime * 1000)
         console.log(this.parseMatrix(startMatrix))
-        console.log(this.arrayToMatrix(this.parseMatrix(startMatrix), 4))
         console.log(startMatrix)
       },
       translateZ(){
         let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
         setTimeout(() => {
-          let endMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-          let matrixToSend = this.arrayToMatrix(this.parseMatrix(endMatrix), 4)
-          console.log(this.arrayToMatrix(this.parseMatrix(endMatrix), 4))
-          this.getTransformData(document.getElementById('test-cube'), matrixToSend)
+          this.getTransformData(document.getElementById('test-cube'))
+          console.log(this.getTransformData(document.getElementById('test-cube')))
         }, this.transitionTime * 1000)
         console.log(this.parseMatrix(startMatrix))
-        console.log(this.arrayToMatrix(this.parseMatrix(startMatrix), 4))
         console.log(startMatrix)
       },
       cameraArray(){
         let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
         setTimeout(() => {
-          let endMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-          let matrixToSend = this.arrayToMatrix(this.parseMatrix(endMatrix), 4)
-          console.log(this.arrayToMatrix(this.parseMatrix(endMatrix), 4))
-          this.getTransformData(document.getElementById('test-cube'), matrixToSend)
+          this.getTransformData(document.getElementById('test-cube'))
+          console.log(this.getTransformData(document.getElementById('test-cube')))
         }, this.transitionTime * 1000)
         console.log(this.parseMatrix(startMatrix))
-        console.log(this.arrayToMatrix(this.parseMatrix(startMatrix), 4))
         console.log(startMatrix)
       }
     },
     methods:{
-      getTransformData(element, matrix){
-        let rotateY = Math.asin(-matrix[0][2]);
-        let rotateX;
-        let rotateZ;
+      getTransformData(element){
+        var computedStyle = getComputedStyle(element, null),
+          val = computedStyle.transform,
+          matrix = this.parseMatrix(val),
+          rotateY = Math.asin(-matrix.m13),
+          rotateX,
+          rotateZ;
 
-        if (Math.cos(rotateY) !== 0){
-          rotateX = Math.atan2(matrix[1][2], matrix[2][2])
-          rotateZ = Math.atan2(matrix[0][1], matrix[0][0])
+        rotateX = Math.atan2(matrix.m23, matrix.m33);
+        rotateZ = Math.atan2(matrix.m12, matrix.m11);
+
+        /*if (Math.cos(rotateY) !== 0) {
+            rotateX = Math.atan2(matrix.m23, matrix.m33);
+            rotateZ = Math.atan2(matrix.m12, matrix.m11);
         } else {
-          rotateX = Math.atan2(-matrix[2][0], matrix[1][1]);
-          rotateZ = 0;
-        }
-        console.log({
-          rotate: { x: rotateX, y: rotateY, z: rotateZ},
-          translate: { x: matrix[3][0], y: matrix[3][1], z: matrix[3][2]}
-        })
+            rotateX = Math.atan2(-matrix.m31, matrix.m22);
+            rotateZ = 0;
+        }*/
+
+        console.log(matrix);
         return {
-          rotate: { x: rotateX, y: rotateY, z: rotateZ},
-          translate: { x: matrix[3][0], y: matrix[3][1], z: matrix[3][2]}
-        }
+          transformStyle: val,
+          matrix: matrix,
+          rotate: {
+            x: rotateX,
+            y: rotateY,
+            z: rotateZ
+          },
+          translate: {
+            x: matrix.m41,
+            y: matrix.m42,
+            z: matrix.m43
+          }
+        };
       },
       getVertexData(element){
         console.log(element.offsetWidth, element.offsetHeight)
@@ -207,22 +303,118 @@
           c:{x: w, y: h, z: 0}, //find location of bottom right corner of face
           d:{x: -w, y: h, z: 0}, //find location of bottom left corner of face
         }
+        let transformVertex;
+        while (element.nodeType === 1) {
+          transformVertex = this.getTransformData(element);
+          vertexData.a = this.addVectors(this.rotateVector(vertexData.a, transformVertex.rotate), transformVertex.translate);
+          vertexData.b = this.addVectors(this.rotateVector(vertexData.b, transformVertex.rotate), transformVertex.translate);
+          vertexData.c = this.addVectors(this.rotateVector(vertexData.c, transformVertex.rotate), transformVertex.translate);
+          vertexData.d = this.addVectors(this.rotateVector(vertexData.d, transformVertex.rotate), transformVertex.translate);
+          element = element.parentNode;
+        }
         console.log(vertexData)
         return vertexData
       },
-      parseMatrix(matrix) {
-        return matrix.match(/(?:\-|\.|\b)(\d|\.|e\-)+/g).map(function(v) {return +v;});
+      parseMatrix(matrixString) {
+        let c = matrixString.split(/\s*[(),]\s*/).slice(1,-1),
+          matrix;
+
+        if (c.length === 6) {
+          // 'matrix()' (3x2)
+          matrix = {
+            m11: +c[0], m21: +c[2], m31: 0, m41: +c[4],
+            m12: +c[1], m22: +c[3], m32: 0, m42: +c[5],
+            m13: 0,     m23: 0,     m33: 1, m43: 0,
+            m14: 0,     m24: 0,     m34: 0, m44: 1
+          };
+        } else if (c.length === 16) {
+          // matrix3d() (4x4)
+          matrix = {
+            m11: +c[0], m21: +c[4], m31: +c[8], m41: +c[12],
+            m12: +c[1], m22: +c[5], m32: +c[9], m42: +c[13],
+            m13: +c[2], m23: +c[6], m33: +c[10], m43: +c[14],
+            m14: +c[3], m24: +c[7], m34: +c[11], m44: +c[15]
+          };
+
+        } else {
+          // handle 'none' or invalid values.
+          matrix = {
+            m11: 1, m21: 0, m31: 0, m41: 0,
+            m12: 0, m22: 1, m32: 0, m42: 0,
+            m13: 0, m23: 0, m33: 1, m43: 0,
+            m14: 0, m24: 0, m34: 0, m44: 1
+          };
+        }
+        return matrix;
       },
-      arrayToMatrix(list, elementsPerSubArray) {
-          let matrix = [], i, k;
-          for (i = 0, k = -1; i < list.length; i++) {
-            if (i % elementsPerSubArray === 0) {
-              k++;
-              matrix[k] = [];
-            }
-          matrix[k].push(list[i]);
-          }
-          return matrix;
+      addVectors (v1, v2) {
+        return {
+          x: v1.x + v2.x,
+          y: v1.y + v2.y,
+          z: v1.z + v2.z
+        };
+      },
+      rotateVector(v1, v2){
+        let x1 = v1.x,
+        y1 = v1.y,
+        z1 = v1.z,
+        angleX = v2.x / 2,
+        angleY = v2.y / 2,
+        angleZ = v2.z / 2,
+
+        cr = Math.cos(angleX),
+        cp = Math.cos(angleY),
+        cy = Math.cos(angleZ),
+        sr = Math.sin(angleX),
+        sp = Math.sin(angleY),
+        sy = Math.sin(angleZ),
+
+        w = cr * cp * cy + -sr * sp * -sy,
+        x = sr * cp * cy - -cr * sp * -sy,
+        y = cr * sp * cy + sr * cp * sy,
+        z = cr * cp * sy - -sr * sp * -cy,
+
+        m0 = 1 - 2 * ( y * y + z * z ),
+        m1 = 2 * (x * y + z * w),
+        m2 = 2 * (x * z - y * w),
+
+        m4 = 2 * ( x * y - z * w ),
+        m5 = 1 - 2 * ( x * x + z * z ),
+        m6 = 2 * (z * y + x * w ),
+
+        m8 = 2 * ( x * z + y * w ),
+        m9 = 2 * ( y * z - x * w ),
+        m10 = 1 - 2 * ( x * x + y * y );
+
+      return {
+        x: x1 * m0 + y1 * m4 + z1 * m8,
+        y: x1 * m1 + y1 * m5 + z1 * m9,
+        z: x1 * m2 + y1 * m6 + z1 * m10
+      };
+      },
+      renderVertex (id, face, vertex) {
+        var id = "_vertex_" + id,
+          vertexElem = face[id],
+          x = vertex.x.toFixed(2),
+          y = vertex.y.toFixed(2),
+          z = vertex.z.toFixed(2),
+          s = 1 - vertex.z / 400; // scale to keep the text readable
+
+        if (!vertexElem) {
+          vertexElem = face[id] = document.createElement("div");
+          vertexElem.className = "vertex";
+          document.getElementById("scene").appendChild(vertexElem);
+        }
+
+        // show the vertex coordinates
+        vertexElem.textContent = "x:" + x + " y:" + y + " z:" + z;
+
+        // apply the translation to the vertex
+        vertexElem.style.cssText =
+          "-webkit-transform: translate3d(" + x + "px," + y + "px," + z + "px) scale(" + s + ");" +
+          "-moz-transform: translate3d(" + x + "px," + y + "px," + z + "px) scale(" + s + ");" +
+          "-ms-transform: translate3d(" + x + "px," + y + "px," + z + "px) scale(" + s + ");" +
+          "transform: translate3d(" + x + "px," + y + "px," + z + "px) scale(" + s + ");" + "font-size: 10px";
       }
     },
     computed:{
@@ -231,20 +423,37 @@
           width: this.width + 'px',
           height: this.height + 'px',
           position: 'absolute',
+          top: 50 + '%',
+          left: 50 + '%',
           backgroundColor: 'transparent',
           transformStyle: 'preserve-3d',
           transform: `rotateX(${this.cameraArray[0]}deg) rotateY(${this.cameraArray[1]}deg) rotateZ(${this.cameraArray[2]}deg)` + `translateZ(${this.translateZ}px) translateY(${this.translateY}px) translateX(${this.translateX}px)`,
           transition: this.transitionTime + 's linear',
         }
       },
-      cuberContainer(){
+      cubeAnimation(){
         return{
           width: this.width + 'px',
           height: this.height + 'px',
-          position: 'relative',
+          position: 'absolute',
+          top: 50 + '%',
+          left: 50 + '%',
+          backgroundColor: 'transparent',
+          transformStyle: 'preserve-3d',
+          transform: `rotateX(${this.cameraArray[0]}deg) rotateY(${this.cameraArray[1]}deg) rotateZ(${this.cameraArray[2]}deg)` + `translateZ(${this.translateZ}px) translateY(${this.translateY}px) translateX(${this.translateX}px)`,
+          animation: 'spin 20s linear infinite',
+        }
+      },
+      cuberContainer(){
+        return{
+          position: 'absolute',
+          top: 50 + '%',
+          left: 50 + '%',
           perspective: this.perspective + 'px',
-          transition: this.transitionTime + 's ease',
+          transition: this.transitionTime + 's linear',
+          opacity: this.opacity + '%',
           zIndex: this.zIndex,
+          transformStyle: 'preserve-3d',
           transform: `translateZ(${this.zStagger}px) translateY(${this.yStagger}px) translateX(${this.xStagger}px)`
         }
       },
@@ -257,7 +466,7 @@
           backgroundColor: this.cubeColor,
           border: '1px solid ' + this.borderColor,
           transform: 'rotateX(90deg)' + `translateZ(${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's ease',
+          transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
           background: this.gradient
         }
@@ -270,7 +479,7 @@
           backgroundColor: this.cubeColor,
           border: '1px solid ' + this.borderColor,
           transform: 'rotateX(90deg)' + `translateZ(-${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's ease',
+          transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
           background: this.gradient
         }
@@ -283,7 +492,7 @@
           backgroundColor: this.cubeColor,
           border: '1px solid ' + this.borderColor,
           transform: 'rotateY(90deg)' + `translateZ(-${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's ease',
+          transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
           background: this.gradient
         }
@@ -296,7 +505,7 @@
           backgroundColor: this.cubeColor,
           border: '1px solid ' + this.borderColor,
           transform: 'rotateY(90deg)' + `translateZ(${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's ease',
+          transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
           background: this.gradient
         }
@@ -309,7 +518,7 @@
           backgroundColor: this.cubeColor,
           border: '1px solid ' + this.borderColor,
           transform: `translateZ(${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's ease',
+          transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
           background: this.gradient
         }
@@ -322,7 +531,7 @@
           backgroundColor: this.cubeColor,
           border: '1px solid ' + this.borderColor,
           transform: `translateZ(-${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's ease',
+          transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
           background: this.gradient
         }
@@ -331,36 +540,131 @@
         return {
           width: this.width + 'px',
           height: this.height + 'px',
+          backgroundColor: this.cubeColor,
           margin: `-${this.height/2}px -${this.width/2}px`,
           border: 'none',
           position: 'absolute',
-          backgroundColor: this.cubeColor,
-          transition: this.transitionTime + 's ease',
+          transform: `translateZ(${this.width/2}px)`,
+          transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
           background: this.gradient
         }
       },
+      faceTwo(){
+        return {
+          width: this.width + 'px',
+          height: this.height + 'px',
+          backgroundColor: this.cubeColor,
+          margin: `-${this.height/2}px -${this.width/2}px`,
+          border: 'none',
+          position: 'absolute',
+          transform: `translateZ(-${this.width/2}px) rotateY(180deg)`,
+          transition: this.transitionTime + 's linear',
+          opacity: this.opacity + '%',
+          background: this.gradient
+        }
+      },
+      faceThree(){
+        return {
+          width: this.width + 'px',
+          height: this.height + 'px',
+          backgroundColor: this.cubeColor,
+          margin: `-${this.height/2}px -${this.width/2}px`,
+          border: 'none',
+          position: 'absolute',
+          transform: `translateX(-${this.width/2}px) rotateY(-90deg)`,
+          transition: this.transitionTime + 's linear',
+          opacity: this.opacity + '%',
+          background: this.gradient
+        }
+      },
+      faceFour(){
+        return {
+          width: this.width + 'px',
+          height: this.height + 'px',
+          backgroundColor: this.cubeColor,
+          margin: `-${this.height/2}px -${this.width/2}px`,
+          border: 'none',
+          position: 'absolute',
+          transform: `translateX(${this.width/2}px) rotateY(90deg)`,
+          transition: this.transitionTime + 's linear',
+          opacity: this.opacity + '%',
+          background: this.gradient
+        }
+      },
+      faceFive(){
+        return {
+          width: this.width + 'px',
+          height: this.height + 'px',
+          backgroundColor: this.cubeColor,
+          margin: `-${this.height/2}px -${this.width/2}px`,
+          border: 'none',
+          position: 'absolute',
+          transform: `translateY(${this.width/2}px) rotateX(-90deg)`,
+          transition: this.transitionTime + 's linear',
+          opacity: this.opacity + '%',
+          background: this.gradient
+        }
+      },
+      faceSix(){
+        return {
+          width: this.width + 'px',
+          height: this.height + 'px',
+          backgroundColor: this.cubeColor,
+          margin: `-${this.height/2}px -${this.width/2}px`,
+          border: 'none',
+          position: 'absolute',
+          transform: `translateY(-${this.width/2}px) rotateX(90deg)`,
+          transition: this.transitionTime + 's linear',
+          opacity: this.opacity + '%',
+          background: this.gradient
+        }
+      },
+      light(){
+        return {
+          position: 'absolute',
+          top: 50 + '%',
+          left: 50 + '%',
+          transformStyle: 'preserve-3d',
+          width: 16 + 'px',
+          height:16 + 'px',
+          margin:-8 + 'px',
+          background:'#ff0',
+          opacity: 0,
+          transform: `translateZ(${this.width*2}px)`,
+        }
+      }
     },
     mounted(){
       console.log(document.getElementById('face-one'))
       let scene = document.getElementById('test-cube')
       let vertexData = this.getVertexData(document.getElementById('face-one'));
       let faceOne = document.getElementById('face-one');
-      let markerA = document.createElement('div');
-      markerA.setAttribute("style","position: absolute; transform: translate3d(" + vertexData.a.x + "px, " + vertexData.a.y + "px, " + vertexData.a.z + "px); background-color: red; height: 10px; width: 10px;")
-      // markerA.style.transform = "translate3d(" + vertexData.a.x + "px, " + vertexData.a.y + "px, " + vertexData.a.z + "px);";
-      console.log(markerA);
-      let markerB = document.createElement('div');
-      markerB.setAttribute("style","position: absolute; transform: translate3d(" + vertexData.b.x + "px, " + vertexData.b.y + "px, " + vertexData.b.z + "px); background-color: red; height: 10px; width: 10px;");
-      let markerC = document.createElement('div');
-      markerC.setAttribute("style","position: absolute; transform: translate3d(" + vertexData.c.x + "px, " + vertexData.c.y + "px, " + vertexData.c.z + "px); background-color: red; height: 10px; width: 10px;")
-      let markerD = document.createElement('div');
-      markerD.setAttribute("style","position: absolute; transform: translate3d(" + vertexData.d.x + "px, " + vertexData.d.y + "px, " + vertexData.d.z + "px); background-color: red; height: 10px; width: 10px;")
-      scene.appendChild(markerA);
-      scene.appendChild(markerB);
-      scene.appendChild(markerC);
-      scene.appendChild(markerD);
       this.showMarkers = true;
+      window.requestAnimationFrame =
+        window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        function(f) {setTimeout(f, 1000/60);}
+      let light = document.getElementById("light");
+      let faces = [].slice.call(document.querySelectorAll(".face"));
+      console.log(faces, light);
+      const loop = () => {
+        let lightPosition = this.getTransformData(light).translate;
+        // Schedule the next render
+        requestAnimationFrame(loop);
+
+        // Light each face
+        faces.forEach((face, i) => {
+          let vertices = this.getVertexData(face);
+          let faceCenter = Vect3.divs(Vect3.sub(vertices.c, vertices.a), 2);
+          let faceNormal = Vect3.normalize(Vect3.cross(Vect3.sub(vertices.b, vertices.a), Vect3.sub(vertices.c, vertices.a)));
+          let direction = Vect3.normalize(Vect3.sub(lightPosition, faceCenter));
+          let amount = 1 - Math.max(0, Vect3.dot(faceNormal, direction)).toFixed(3);
+          face.style.backgroundImage = "linear-gradient(rgba(0,0,0," + amount*0.9 + "), rgba(0,0,0," + amount*0.9 + "))";
+        });
+      }
+      // start the loop
+      loop();
       console.log('ive been created!', this.zIndex, vertexData, scene);
     }
   }
@@ -368,6 +672,91 @@
 <style scoped>
   *{
     margin: 0;
+  }
+  .cube-wrapper-animation{
+
+  }
+  .vertex {
+    width: 9px;
+    height: 9px;
+    margin: -4px;
+    background: rgba(255, 0, 0, .5);
+    border-radius: 7px;
+    color: #333;
+    font: 10px / 1 "Courier New", monospace;
+    text-indent: 14px;
+    white-space: nowrap;
+  }
+  @keyframes spin {
+    to {
+      -webkit-transform: rotateX(360deg) rotateY(1080deg) rotateZ(720deg);
+    }
+  }
+  .light{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-style: preserve-3d;
+    width:16px;
+    height:16px;
+    margin:-8px;
+    background:#ff0;
+    opacity: 0;
+    transform: translateZ(400px);
+  }
+  .test-cube .face:nth-child(1) {
+    background-color: #013249;
+    width: 200px;
+    height: 200px;
+    margin: -100px;
+  }
+  .test-cube .face:nth-child(2) {
+    /*-webkit-transform: translateZ(-200px) rotateY(180deg);*/
+    /*-moz-transform: translateZ(-200px) rotateY(180deg);*/
+    /*-ms-transform: translateZ(-200px) rotateY(180deg);*/
+    /*transform: translateZ(-100px) rotateY(180deg);*/
+    background-color: #013249;
+    width: 200px;
+    height: 200px;
+    margin: -100px;
+  }
+  .test-cube .face:nth-child(3) {
+    /*-webkit-transform: translateX(-200px) rotateY(-90deg);*/
+    /*-moz-transform: translateX(-200px) rotateY(-90deg);*/
+    /*-ms-transform: translateX(-200px) rotateY(-90deg);*/
+    /*transform: translateX(-100px) translateY(-100px) rotateY(-90deg);*/
+    background-color: #013249;
+    width: 200px;
+    height: 200px;
+    margin: -100px;
+  }
+  .test-cube .face:nth-child(4) {
+    /*transform: translateX(100px) translateY(-200px) rotateY(90deg);*/
+    background-color: #013249;
+    width: 200px;
+    height: 200px;
+    margin: -100px;
+
+  }
+  .test-cube .face:nth-child(5) {
+    /*-webkit-transform: translateY(200px) rotateX(-90deg);*/
+    /*-moz-transform: translateY(200px) rotateX(-90deg);*/
+    /*-ms-transform: translateY(200px) rotateX(-90deg);*/
+    /*transform: translateY(-200px) rotateX(-90deg);*/
+    background-color: #013249;
+    width: 200px;
+    height: 200px;
+    margin: -100px;
+  }
+  .test-cube .face:nth-child(6) {
+    /*-webkit-transform: translateY(-200px) rotateX(90deg);*/
+    /*-moz-transform: translateY(-200px) rotateX(90deg);*/
+    /*-ms-transform: translateY(-200px) rotateX(90deg);*/
+    /*transform: translateY(-500px) rotateX(90deg);*/
+    background-color: #013249;
+    width: 200px;
+    height: 200px;
+    margin: -100px;
   }
   .camera-controls{
     position: absolute;
