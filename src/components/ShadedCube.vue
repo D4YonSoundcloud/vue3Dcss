@@ -144,7 +144,6 @@
     name: "ShadedCube",
     data(){
       return{
-        translateX: -400,
         translateY: 0,
         translateZ: 0,
         showMarkers: false,
@@ -205,6 +204,10 @@
       yStagger:{
         type: Number,
         default: 0,
+      },
+      translateX:{
+        type: Number,
+        default: 0
       },
       opacity:{
         type: Number,

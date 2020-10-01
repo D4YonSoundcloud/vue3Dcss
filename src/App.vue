@@ -69,8 +69,8 @@
 <!--&lt;!&ndash;        </Cube>&ndash;&gt;-->
 <!--      </div>-->
       <ShadedCube :cameraArray="cubeAnimationArray" :borderColor="borderColor" :height="hundredCubesWidth" :width="hundredCubesWidth"
-                  :opacity="opacity" :showControls="true" :transitionTime="transitionTime"></ShadedCube>
-      <ShadedCube :cameraArray="[cubeAnimationArray[0]*-1,cubeAnimationArray[1]*-1,cubeAnimationArray[2]*-1 ]" :borderColor="borderColor" :height="hundredCubesWidth*1.5" :width="hundredCubesWidth*1.5" :xStagger="xTranslate*50" :yStagger="yTranslate*50"
+                  :opacity="opacity" :showControls="true" :transitionTime="transitionTime" :translateX="-400"></ShadedCube>
+      <ShadedCube :cameraArray="[cubeAnimationArray[0]*-1,cubeAnimationArray[1]*-1,cubeAnimationArray[2]*-1 ]" :borderColor="borderColor" :height="hundredCubesWidth" :width="hundredCubesWidth" :translateX="400"
                   :opacity="opacity" :showControls="true" :cubeColor="gradientColor1" :transitionTime="transitionTime"></ShadedCube>
     </div>
   </div>
