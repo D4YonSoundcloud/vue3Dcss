@@ -1,5 +1,5 @@
 <template>
-  <div :class="'cube-wrapper'" id="scene" v-bind:style="cuberContainer">
+  <div :class="'cube-wrapper'" :id="'scene'+id" v-bind:style="cuberContainer">
     <div class="camera-controls" v-if="showControls">
       <input type="range" style="width: 150px" min="500" max="6000" step="10" v-model="perspective">
       <input type="number" style="width: 25px" v-model="perspective"/>
@@ -46,14 +46,14 @@
 <!--      <div class="top-face" v-bind:style="topFace"></div>-->
 <!--    </div>-->
     <div :class="'test-cube'" v-bind:style="rotateCubeAnimation ? cubeAnimation : cube" id="test-cube" >
-      <div class="face" id="face-one" v-bind:style="faceOne"></div>
-      <div class="face" id="face-two" v-bind:style="faceTwo" ></div>
-      <div class="face" id="face-three" v-bind:style="faceThree"></div>
-      <div class="face" id="face-four" v-bind:style="faceFour"></div>
-      <div class="face" id="face-five" v-bind:style="faceFive"></div>
-      <div class="face" id="face-six" v-bind:style="faceSix"></div>
+      <div class="face" id="face-one" v-bind:style="faceOne">1</div>
+      <div class="face" id="face-two" v-bind:style="faceTwo" >2</div>
+      <div class="face" id="face-three" v-bind:style="faceThree">3</div>
+      <div class="face" id="face-four" v-bind:style="faceFour">4</div>
+      <div class="face" id="face-five" v-bind:style="faceFive">5</div>
+      <div class="face" id="face-six" v-bind:style="faceSix">6</div>
     </div>
-    <div class="light" id="light" v-bind:style="light"></div>
+    <div class="light" :id="'light'+id" v-bind:style="light"></div>
   </div>
 </template>
 <script>
@@ -139,15 +139,27 @@
       };
     }
   };
+  function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = parseFloat('0.' + Math.random().toString().replace('0.', '') + new Date().getTime()) * 16 | 0,
+        v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  window.performance =
+    window.performance ||
+    { now: function() { return +new Date(); } };
 
   export default {
     name: "ShadedCube",
     data(){
       return{
-        translateY: 0,
         translateZ: 0,
         showMarkers: false,
         manualTranslate: false,
+        id: uuidv4(),
+
       }
     },
     props:{
@@ -209,6 +221,26 @@
         type: Number,
         default: 0
       },
+      translateY:{
+        type: Number,
+        default: 0
+      },
+      lightX:{
+        type: Number,
+        default: 100
+      },
+      lightY:{
+        type: Number,
+        default: 200
+      },
+      lightZ:{
+        type: Number,
+        default: 150
+      },
+      lightPower:{
+        type:Number,
+        default: 1
+      },
       opacity:{
         type: Number,
         default: 100,
@@ -222,47 +254,19 @@
       }
     },
     watch:{
-      translateX(){
-        let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-        setTimeout(() => {
-          this.getTransformData(document.getElementById('test-cube'))
-          console.log(this.getTransformData(document.getElementById('test-cube')))
-        }, this.transitionTime * 1000)
-        console.log(this.parseMatrix(startMatrix))
-        console.log(this.parseMatrix(startMatrix))
-        console.log(startMatrix)
+      lightX(){
+        console.log(this.lightX);
       },
-      translateY(){
-        let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-        setTimeout(() => {
-          this.getTransformData(document.getElementById('test-cube'))
-          console.log(this.getTransformData(document.getElementById('test-cube')))
-        }, this.transitionTime * 1000)
-        console.log(this.parseMatrix(startMatrix))
-        console.log(startMatrix)
+      lightY(){
+        console.log(this.lightY);
       },
-      translateZ(){
-        let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-        setTimeout(() => {
-          this.getTransformData(document.getElementById('test-cube'))
-          console.log(this.getTransformData(document.getElementById('test-cube')))
-        }, this.transitionTime * 1000)
-        console.log(this.parseMatrix(startMatrix))
-        console.log(startMatrix)
-      },
-      cameraArray(){
-        let startMatrix = getComputedStyle(document.getElementById('test-cube'), null).transform;
-        setTimeout(() => {
-          this.getTransformData(document.getElementById('test-cube'))
-          console.log(this.getTransformData(document.getElementById('test-cube')))
-        }, this.transitionTime * 1000)
-        console.log(this.parseMatrix(startMatrix))
-        console.log(startMatrix)
+      lightZ(){
+        console.log(this.lightZ);
       }
     },
     methods:{
       getTransformData(element){
-        var computedStyle = getComputedStyle(element, null),
+        let computedStyle = getComputedStyle(element, null),
           val = computedStyle.transform,
           matrix = this.parseMatrix(val),
           rotateY = Math.asin(-matrix.m13),
@@ -272,15 +276,6 @@
         rotateX = Math.atan2(matrix.m23, matrix.m33);
         rotateZ = Math.atan2(matrix.m12, matrix.m11);
 
-        /*if (Math.cos(rotateY) !== 0) {
-            rotateX = Math.atan2(matrix.m23, matrix.m33);
-            rotateZ = Math.atan2(matrix.m12, matrix.m11);
-        } else {
-            rotateX = Math.atan2(-matrix.m31, matrix.m22);
-            rotateZ = 0;
-        }*/
-
-        console.log(matrix);
         return {
           transformStyle: val,
           matrix: matrix,
@@ -297,7 +292,6 @@
         };
       },
       getVertexData(element){
-        console.log(element.offsetWidth, element.offsetHeight)
         let w = Math.round(element.offsetWidth/2) //width of the element
         let h = Math.round(element.offsetHeight/2) //height of the element
         let vertexData = {
@@ -315,7 +309,6 @@
           vertexData.d = this.addVectors(this.rotateVector(vertexData.d, transformVertex.rotate), transformVertex.translate);
           element = element.parentNode;
         }
-        console.log(vertexData)
         return vertexData
       },
       parseMatrix(matrixString) {
@@ -350,6 +343,7 @@
         }
         return matrix;
       },
+      //adds two vectors together
       addVectors (v1, v2) {
         return {
           x: v1.x + v2.x,
@@ -395,6 +389,8 @@
         z: x1 * m2 + y1 * m6 + z1 * m10
       };
       },
+
+      //left over function of debugging vertex points
       renderVertex (id, face, vertex) {
         var id = "_vertex_" + id,
           vertexElem = face[id],
@@ -460,85 +456,6 @@
           transform: `translateZ(${this.zStagger}px) translateY(${this.yStagger}px) translateX(${this.xStagger}px)`
         }
       },
-      frontFace(){
-        return{
-          width: this.width + 'px',
-          height: this.height + 'px',
-          margin: `-${this.height/2} -${this.width}`,
-          position: 'absolute',
-          backgroundColor: this.cubeColor,
-          border: '1px solid ' + this.borderColor,
-          transform: 'rotateX(90deg)' + `translateZ(${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's linear',
-          opacity: this.opacity + '%',
-          background: this.gradient
-        }
-      },
-      backFace(){
-        return{
-          width: this.width + 'px',
-          height: this.height + 'px',
-          position: 'absolute',
-          backgroundColor: this.cubeColor,
-          border: '1px solid ' + this.borderColor,
-          transform: 'rotateX(90deg)' + `translateZ(-${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's linear',
-          opacity: this.opacity + '%',
-          background: this.gradient
-        }
-      },
-      leftFace(){
-        return{
-          width: this.width + 'px',
-          height: this.height + 'px',
-          position: 'absolute',
-          backgroundColor: this.cubeColor,
-          border: '1px solid ' + this.borderColor,
-          transform: 'rotateY(90deg)' + `translateZ(-${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's linear',
-          opacity: this.opacity + '%',
-          background: this.gradient
-        }
-      },
-      rightFace(){
-        return{
-          width: this.width + 'px',
-          height: this.height + 'px',
-          position: 'absolute',
-          backgroundColor: this.cubeColor,
-          border: '1px solid ' + this.borderColor,
-          transform: 'rotateY(90deg)' + `translateZ(${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's linear',
-          opacity: this.opacity + '%',
-          background: this.gradient
-        }
-      },
-      topFace(){
-        return{
-          width: this.width + 'px',
-          height: this.height + 'px',
-          position: 'absolute',
-          backgroundColor: this.cubeColor,
-          border: '1px solid ' + this.borderColor,
-          transform: `translateZ(${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's linear',
-          opacity: this.opacity + '%',
-          background: this.gradient
-        }
-      },
-      bottomFace(){
-        return{
-          width: this.width + 'px',
-          height: this.height + 'px',
-          position: 'absolute',
-          backgroundColor: this.cubeColor,
-          border: '1px solid ' + this.borderColor,
-          transform: `translateZ(-${Math.ceil(this.width/2) + 1}px)`,
-          transition: this.transitionTime + 's linear',
-          opacity: this.opacity + '%',
-          background: this.gradient
-        }
-      },
       faceOne(){
         return {
           width: this.width + 'px',
@@ -550,7 +467,6 @@
           transform: `translateZ(${this.width/2}px)`,
           transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
-          background: this.gradient
         }
       },
       faceTwo(){
@@ -564,7 +480,6 @@
           transform: `translateZ(-${this.width/2}px) rotateY(180deg)`,
           transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
-          background: this.gradient
         }
       },
       faceThree(){
@@ -578,7 +493,6 @@
           transform: `translateX(-${this.width/2}px) rotateY(-90deg)`,
           transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
-          background: this.gradient
         }
       },
       faceFour(){
@@ -592,7 +506,6 @@
           transform: `translateX(${this.width/2}px) rotateY(90deg)`,
           transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
-          background: this.gradient
         }
       },
       faceFive(){
@@ -606,7 +519,6 @@
           transform: `translateY(${this.width/2}px) rotateX(-90deg)`,
           transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
-          background: this.gradient
         }
       },
       faceSix(){
@@ -620,7 +532,6 @@
           transform: `translateY(-${this.width/2}px) rotateX(90deg)`,
           transition: this.transitionTime + 's linear',
           opacity: this.opacity + '%',
-          background: this.gradient
         }
       },
       light(){
@@ -633,29 +544,75 @@
           height:16 + 'px',
           margin:-8 + 'px',
           background:'#ff0',
-          opacity: 0,
-          transform: `translateZ(${this.width*2}px)`,
+          opacity: 90,
+          transform: `translateZ(${this.width*2}px)`
         }
       }
     },
     mounted(){
-      console.log(document.getElementById('face-one'))
-      let scene = document.getElementById('test-cube')
+      let scene = document.getElementById('scene'+this.id)
+      console.log(scene);
       let vertexData = this.getVertexData(document.getElementById('face-one'));
-      let faceOne = document.getElementById('face-one');
-      this.showMarkers = true;
       window.requestAnimationFrame =
         window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         function(f) {setTimeout(f, 1000/60);}
-      let light = document.getElementById("light");
+      // let transformProp = ["transform", "webkitTransform", "MozTransform", "msTransform"].filter(function (prop) {
+      //   return prop in document.documentElement.style;
+      // })[0];
+      // let faces = [].slice.call(scene.querySelectorAll(".face")).map((face)=>{
+      //   let vertices = this.getVertexData(face);
+      //   return {
+      //     vertices: vertices,
+      //     normal: Vect3.normalize(Vect3.cross(Vect3.sub(vertices.b, vertices.a), Vect3.sub(vertices.c,vertices.a))),
+      //     center: Vect3.divs(Vect3.sub(vertices.c, vertices.a), 2),
+      //     elem: face
+      //   }
+      // })
       let faces = [].slice.call(document.querySelectorAll(".face"));
+
+      let light = document.getElementById("light"+this.id);
+      let nextFaceIndex = 0;
+      let lightX = 100, lightY = 200;
+      let angleX = 0, angleY = 0;
+      let speedX = 0, speedY = 0;
+
+      // const render = (startTime) => {
+      //   let faceNormal, faceCenter, direction, amount;
+      //   let sceneTransform = this.getTransformData(scene),
+      //     lightTransform = this.getTransformData(light),
+      //     lightPosition = Vect3.rotate(lightTransform.translate, Vect3.muls(sceneTransform.rotate, -1));
+      //
+      //   // while(++faceNum < faceCount && performance.now() - startTime <= 5){
+      //   //   face = faces[nextFaceIndex];
+      //   //   direction = Vect3.normalize(Vect3.sub(lightPosition, face.center));
+      //   //   amount = 1 - Math.max(0, Vect3.dot(face.normal, direction)).toFixed(2);
+      //   //   if (face.light !== amount) {
+      //   //     face.light = amount
+      //   //     face.elem.style.backgroundImage = "linear-gradient(rgba(0,0,0," + amount*this.lightPower + "),rgba(0,0,0," + amount*this.lightPower + "))";
+      //   //     nextFaceIndex = (nextFaceIndex + 1) % faceCount;
+      //   //   }
+      //   // }
+      //   faces.forEach(function (face) {
+      //     // add the X-Wing translations to each face
+      //     faceNormal = Vect3.rotate(face.normal, sceneTransform.rotate);
+      //     faceCenter = Vect3.add(face.center, sceneTransform.translate);
+      //     faceCenter = Vect3.rotate(faceCenter, sceneTransform.translate);
+      //     direction = Vect3.normalize(Vect3.sub(lightTransform.translate, faceCenter));
+      //     amount = 1 - Math.max(0, Vect3.dot(faceNormal, direction)).toFixed(2);
+      //
+      //     // only repaint if the light changed
+      //     if (face.light != amount) {
+      //       face.light = amount;
+      //       face.elem.style.backgroundImage = "linear-gradient(rgba(0,0,0," + amount + "),rgba(0,0,0," + amount + "))";
+      //     }
+      //   });
+      // }
       console.log(faces, light);
       const loop = () => {
         let lightPosition = this.getTransformData(light).translate;
         // Schedule the next render
         requestAnimationFrame(loop);
-
         // Light each face
         faces.forEach((face, i) => {
           let vertices = this.getVertexData(face);
@@ -663,11 +620,12 @@
           let faceNormal = Vect3.normalize(Vect3.cross(Vect3.sub(vertices.b, vertices.a), Vect3.sub(vertices.c, vertices.a)));
           let direction = Vect3.normalize(Vect3.sub(lightPosition, faceCenter));
           let amount = 1 - Math.max(0, Vect3.dot(faceNormal, direction)).toFixed(3);
-          face.style.backgroundImage = "linear-gradient(rgba(0,0,0," + amount*0.9 + "), rgba(0,0,0," + amount*0.9 + "))";
+          face.style.backgroundImage = "linear-gradient(rgba(0,0,0," + amount + "), rgba(0,0,0," + amount + "))";
         });
       }
       // start the loop
       loop();
+      console.log(this.lightX,this.lightY,this.lightZ);
       console.log('ive been created!', this.zIndex, vertexData, scene);
     }
   }
@@ -704,8 +662,7 @@
     height:16px;
     margin:-8px;
     background:#ff0;
-    opacity: 0;
-    transform: translateZ(400px);
+    opacity: 90%;
   }
   .test-cube .face:nth-child(1) {
     background-color: #013249;
@@ -718,7 +675,7 @@
     /*-moz-transform: translateZ(-200px) rotateY(180deg);*/
     /*-ms-transform: translateZ(-200px) rotateY(180deg);*/
     /*transform: translateZ(-100px) rotateY(180deg);*/
-    background-color: #013249;
+    background-color: #00adff;
     width: 200px;
     height: 200px;
     margin: -100px;
@@ -728,14 +685,14 @@
     /*-moz-transform: translateX(-200px) rotateY(-90deg);*/
     /*-ms-transform: translateX(-200px) rotateY(-90deg);*/
     /*transform: translateX(-100px) translateY(-100px) rotateY(-90deg);*/
-    background-color: #013249;
+    background-color: #00adff;
     width: 200px;
     height: 200px;
     margin: -100px;
   }
   .test-cube .face:nth-child(4) {
     /*transform: translateX(100px) translateY(-200px) rotateY(90deg);*/
-    background-color: #013249;
+    background-color: #00adff;
     width: 200px;
     height: 200px;
     margin: -100px;
@@ -746,7 +703,7 @@
     /*-moz-transform: translateY(200px) rotateX(-90deg);*/
     /*-ms-transform: translateY(200px) rotateX(-90deg);*/
     /*transform: translateY(-200px) rotateX(-90deg);*/
-    background-color: #013249;
+    background-color: #00adff;
     width: 200px;
     height: 200px;
     margin: -100px;
@@ -756,7 +713,7 @@
     /*-moz-transform: translateY(-200px) rotateX(90deg);*/
     /*-ms-transform: translateY(-200px) rotateX(90deg);*/
     /*transform: translateY(-500px) rotateX(90deg);*/
-    background-color: #013249;
+    background-color: #00adff;
     width: 200px;
     height: 200px;
     margin: -100px;

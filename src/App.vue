@@ -39,6 +39,14 @@
       <input type="number" style="width: 60px" v-model="cubeAnimationArray[2]"/>
       <input type="range" style="width: 250px" min="0" max="10" step="0.25" v-model="rectangleSize">
       <input type="number" style="width: 60px" v-model="rectangleSize"/>
+      <input type="range" style="width: 250px" min="-1000" max="1000" step="1" v-model="lightX">
+      <input type="number" style="width: 60px" v-model="computedLightX"/>
+      <input type="range" style="width: 250px" min="-1000" max="1000" step="1" v-model="lightY">
+      <input type="number" style="width: 60px" v-model="computedLightY"/>
+      <input type="range" style="width: 250px" min="-1000" max="1000" step="1" v-model="lightZ">
+      <input type="number" style="width: 60px" v-model="computedLightZ"/>
+      <input type="range" style="width: 250px" min="0" max="3" step="0.05" v-model="lightPower">
+      <input type="number" style="width: 60px" v-model="lightPower"/>
       <br>
 
     </div>
@@ -68,10 +76,11 @@
 <!--&lt;!&ndash;          :transitionTime="transitionTime"  v-bind:style="{transform: `translateY(${(0.25*1000) - 25}px)`}" :width="50" :height="50" :opacity="opacity" :cameraArray="cubeAnimationArray">&ndash;&gt;-->
 <!--&lt;!&ndash;        </Cube>&ndash;&gt;-->
 <!--      </div>-->
-      <ShadedCube :cameraArray="cubeAnimationArray" :borderColor="borderColor" :height="hundredCubesWidth" :width="hundredCubesWidth"
-                  :opacity="opacity" :showControls="true" :transitionTime="transitionTime" :translateX="-400"></ShadedCube>
-      <ShadedCube :cameraArray="[cubeAnimationArray[0]*-1,cubeAnimationArray[1]*-1,cubeAnimationArray[2]*-1 ]" :borderColor="borderColor" :height="hundredCubesWidth" :width="hundredCubesWidth" :translateX="400"
-                  :opacity="opacity" :showControls="true" :cubeColor="gradientColor1" :transitionTime="transitionTime"></ShadedCube>
+      <ShadedCube :cameraArray="cubeAnimationArray" :borderColor="borderColor" :height="hundredCubesWidth" :width="hundredCubesWidth" :lightX="parseFloat(computedLightX)" :lightY="parseFloat(computedLightY)" :lightZ="parseFloat(computedLightZ)"
+                  :opacity="opacity" :showControls="true" :cubeColor="gradientColor1" :lightPower="parseFloat(lightPower)" :transitionTime="transitionTime" :translateX="-400" :translateY="50"></ShadedCube>
+      <ShadedCube :cameraArray="[cubeAnimationArray[0]*-1,cubeAnimationArray[1]*-1,cubeAnimationArray[2]*-1]" :borderColor="borderColor" :translateY="50" :height="hundredCubesWidth"
+                  :width="hundredCubesWidth" :translateX="400" :lightX="parseFloat(computedLightX)*-1" :lightY="parseFloat(computedLightY)*-1" :lightZ="parseFloat(computedLightZ)*-1"
+                  :opacity="opacity" :showControls="true" :cubeColor="gradientColor1" :lightPower="parseFloat(lightPower)" :transitionTime="transitionTime"></ShadedCube>
     </div>
   </div>
 </template>
@@ -118,12 +127,15 @@
         cubeLayerCount: 0,
         gradientVariable: 3,
         hundredCubesContainerHeightWidth: 0,
-        gradientColor1: '#000000',
+        gradientColor1: '#44515e',
         gradientColor2: '#FFFFFF',
         gradientColor1Percentage: 0,
         gradientColor2Percentage: 10,
         gradientColorAngle: 45,
         borderColor: 'rgba(0,0,0,1)',
+        lightX: -100,
+        lightY: -200,
+        lightZ: 200,
         tweenedGradient: 45,
         tweenedGradientOne: 0,
         tweenedGradientTwo: 10,
@@ -131,6 +143,10 @@
         tweenedCubeCameraY: 0,
         tweenedCubeCameraZ: 0,
         rectangleSize: 0,
+        tweenedLightX: -100,
+        tweenedLightY: -200,
+        tweenedLightZ: 200,
+        lightPower: 1,
       }
     },
     methods:{
@@ -172,6 +188,15 @@
       gradientColorAngle(newVal){
         gsap.to(this.$data, { duration: this.transitionTime, tweenedGradient: newVal });
       },
+      lightX(newVal){
+        gsap.to(this.$data, { duration: this.transitionTime, tweenedLightX: newVal, ease: Linear.easeNone });
+      },
+      lightY(newVal){
+        gsap.to(this.$data, { duration: this.transitionTime, tweenedLightY: newVal, ease: Linear.easeNone  });
+      },
+      lightZ(newVal){
+        gsap.to(this.$data, { duration: this.transitionTime, tweenedLightZ: newVal, ease: Linear.easeNone  });
+      },
       gradientColor1Percentage(newVal){
         gsap.to(this.$data, { duration: this.transitionTime, tweenedGradientOne: newVal });
       },
@@ -200,6 +225,15 @@
       },
       computedGradientPercentageTwo(){
         return this.tweenedGradientTwo.toFixed();
+      },
+      computedLightX(){
+        return this.tweenedLightX.toFixed();
+      },
+      computedLightY(){
+        return this.tweenedLightY.toFixed();
+      },
+      computedLightZ(){
+        return this.tweenedLightZ.toFixed();
       },
       computedCubeCameraX(){
         return this.tweenedCubeCameraX.toFixed();
@@ -232,13 +266,21 @@
       //   }, ((this.transitionTime*1000))/2)
       // }
       // this.$nextTick(() => myFunc())
+      // setInterval(()=>{
+      //   this.gradientColorAngle = this.gradientColorAngle + 1;
+      // },this.transitionTime)
       setInterval(()=>{
-        this.gradientColorAngle = this.gradientColorAngle + 1;
-      },this.transitionTime)
-      setInterval(()=>{
-        Vue.set(this.cubeAnimationArray, 0, this.cubeAnimationArray[0] + 45)
-        Vue.set(this.cubeAnimationArray, 1, this.cubeAnimationArray[1] + 135)
-        Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 90)
+        Vue.set(this.cubeAnimationArray, 0, this.cubeAnimationArray[0] - 45)
+        Vue.set(this.cubeAnimationArray, 1, this.cubeAnimationArray[1] - 90)
+        if(this.lightX > this.hundredCubesWidth*2) {
+          this.lightX = this.lightX*-1;
+        }
+        if(this.lightY > this.hundredCubesWidth*2) {
+          this.lightY = this.lightY*-1
+        }
+        this.lightX = this.lightX + 100;
+        this.lightY = this.lightY + 100;
+        // Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 90)
         // Vue.set(this.cubeAnimationArray, 2, this.cubeAnimationArray[2] + 180)
         console.log(this.cubeAnimationArray);
       }, this.transitionTime*1000)
